@@ -1,0 +1,14 @@
+{
+  "name": "Hey Banco",
+  "short_name": "Hey",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#050505",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
