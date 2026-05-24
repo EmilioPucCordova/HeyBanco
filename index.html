@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hey Banco - Pro Dashboard</title>
     <style>
+<link rel="icon" type="image/png" href="favicon.png">
+    
+    <link rel="apple-touch-icon" href="favicon.png">
+    
+    <link rel="manifest" href="manifest.json">
+    
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         :root {
@@ -159,7 +165,10 @@
 
     <!-- Menú Lateral -->
     <div class="sidebar">
-        <div class="brand">🏦 Hey Banco</div>
+<div class="brand">
+    <img src="favicon.png" alt="Logo" style="width: 30px; height: 30px; border-radius: 8px;"> 
+    Hey Banco
+</div>
         
         <select id="account-selector" style="margin-bottom: 2rem;" onchange="cambiarCuenta(this.value)">
             <option value="personal">Cuenta Personal (Emi)</option>
