@@ -37,7 +37,7 @@
             --text-muted: #6b7280;
             --border: rgba(0, 0, 0, 0.1);
             --card-grad: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
         * { box-sizing: border-box; }
@@ -148,6 +148,14 @@
         .chat-input input { margin-top: 0; border-radius: 8px 0 0 8px; border-right: none; }
         .chat-input button { border-radius: 0 8px 8px 0; width: auto; }
 
+        /* Estilos del Modal del Comprobante */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); z-index: 10000; display: none; place-items: center; padding: 1rem; }
+        .modal-overlay.active { display: grid; }
+        .comprobante-box { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 420px; padding: 2rem; box-shadow: var(--shadow); text-align: center; position: relative; animation: fadeSlideUp 0.3s ease; }
+        .receipt-success-badge { width: 60px; height: 60px; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: var(--success); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1rem auto; font-size: 1.8rem; }
+        .receipt-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; text-align: left; }
+        .receipt-row:last-of-type { border-bottom: none; margin-bottom: 1rem; }
+
         /* Toast */
         #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
         .toast { background: var(--bg-elevated); border-left: 4px solid var(--accent); padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: var(--glass-blur); animation: slideUpToast 0.3s forwards; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); min-width: 300px;}
@@ -162,10 +170,10 @@
 
     <!-- Menú Lateral -->
     <div class="sidebar">
-<div class="brand">
-    <img src="favicon.png" alt="Logo" style="width: 30px; height: 30px; border-radius: 8px;"> 
-    Hey Banco
-</div>
+        <div class="brand">
+            <img src="favicon.png" alt="Logo" style="width: 30px; height: 30px; border-radius: 8px;"> 
+            Hey Banco
+        </div>
         
         <select id="account-selector" style="margin-bottom: 2rem;" onchange="cambiarCuenta(this.value)">
             <option value="personal">Cuenta Personal (Emi)</option>
@@ -377,7 +385,6 @@
                         <h3 class="panel-title">Recibir por CoDi (QR)</h3>
                         <p class="text-sm">Muestra este código para recibir pagos sin comisiones.</p>
                         <div style="background: white; padding: 20px; display: inline-block; border-radius: 10px; margin-top: 1rem;">
-                            <!-- Placeholder de QR usando un patrón SVG simple para no depender de APIs externas -->
                             <svg width="150" height="150" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="100" height="100" fill="white"/>
                                 <path d="M10,10 h30 v30 h-30 z M15,15 h20 v20 h-20 z M60,10 h30 v30 h-30 z M65,15 h20 v20 h-20 z M10,60 h30 v30 h-30 z M15,65 h20 v20 h-20 z M50,50 h10 v10 h-10 z M70,50 h20 v20 h-20 z M50,70 h20 v20 h-20 z M80,80 h10 v10 h-10 z" fill="black"/>
@@ -403,6 +410,22 @@
                     </div>
                 </div>
              </div>
+        </div>
+    </div>
+
+    <!-- Ventana Modal de Comprobante -->
+    <div class="modal-overlay" id="modal-comprobante">
+        <div class="comprobante-box">
+            <div class="receipt-success-badge">✓</div>
+            <h3 style="margin: 0 0 0.5rem 0; font-weight: 700;">¡Transferencia Exitosa!</h3>
+            <p class="text-sm" style="margin-bottom: 1.5rem;">Comprobante Digital SPEI</p>
+            
+            <div id="receipt-content">
+                <!-- Se inyecta dinámicamente con JS -->
+            </div>
+
+            <button class="btn" style="margin-bottom: 0.5rem;" onclick="descargarPDF('Comprobante SPEI')">Descargar PDF</button>
+            <button class="btn-outline" style="width: 100%; padding: 0.8rem; border-radius: 10px;" onclick="cerrarComprobante()">Cerrar</button>
         </div>
     </div>
 
@@ -433,15 +456,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Configuración proporcionada
+        // Nueva Configuración de Base de Datos Vinculada
         const firebaseConfig = {
-            apiKey: "AIzaSyBcVhSO4rl8tW68-OI5hrwdUIEPH-kPU0s",
-            authDomain: "tesst121-d7a20.firebaseapp.com",
-            projectId: "tesst121-d7a20",
-            storageBucket: "tesst121-d7a20.firebasestorage.app",
-            messagingSenderId: "825247833448",
-            appId: "1:825247833448:web:786f5c9dc9e6b1f780cadd",
-            measurementId: "G-W1D6Q524RD"
+            apiKey: "AIzaSyBAFR3q4CZC6ccuxt4wYopacrnqPQuTc14",
+            authDomain: "heybancoo.firebaseapp.com",
+            projectId: "heybancoo",
+            storageBucket: "heybancoo.firebasestorage.app",
+            messagingSenderId: "480820845702",
+            appId: "1:480820845702:web:94d738d750b49e31db0507",
+            measurementId: "G-30C15532P0"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -453,7 +476,7 @@
         let gastosSesionActual = 0; 
         let isPrivate = false;
         let currentFilter = 'todos';
-        let allMovements = []; // Caché local para filtros rápidos
+        let allMovements = []; 
         let cvvInterval;
 
         // UI Helpers Globales
@@ -469,7 +492,7 @@
         window.togglePrivacidad = function() {
             isPrivate = !isPrivate;
             actualizarSaldos();
-            renderizarHistorial(allMovements); // Re-render para ocultar/mostrar montos en historial
+            renderizarHistorial(allMovements);
         }
 
         window.toggleTheme = function() {
@@ -486,14 +509,13 @@
             document.querySelectorAll('.section-panel').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
             document.getElementById(`sec-${sec}`).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
             const titulos = { inicio: 'Resumen General', transferencias: 'Transferencias SPEI', inversiones: 'Inversiones Hey', tarjetas: 'Tarjetas & Seguridad', ajustes: 'Configuración de Perfil' };
             document.getElementById('top-title').textContent = titulos[sec];
         }
 
         window.cambiarCuenta = function(val) {
             window.toast(`Cambiando a entorno: ${val === 'personal' ? 'Cuenta Personal' : 'Pointbuy Negocios'}`);
-            // Aquí se podría recargar datos específicos en un app real.
         }
 
         function actualizarSaldos() {
@@ -509,7 +531,6 @@
             });
         }
 
-        // Nuevas Funciones UI Integradas
         window.toggleNotifications = function() {
             document.getElementById('notif-box').classList.toggle('active');
         }
@@ -556,7 +577,7 @@
             const dias = parseInt(document.getElementById('inv-plazo').value);
             if(isNaN(monto) || monto <= 0) return window.toast('Ingresa un monto válido.', 'error');
             
-            const tasaAnual = 0.10; // 10%
+            const tasaAnual = 0.10; 
             const rendimiento = monto * (tasaAnual) * (dias / 365);
             const final = monto + rendimiento;
             
@@ -584,12 +605,10 @@
             const display = document.getElementById('cvv-display');
             const timerDisplay = document.getElementById('cvv-timer');
             
-            // Generar CVV aleatorio
             display.textContent = Math.floor(100 + Math.random() * 900);
             
-            // Reiniciar timer
             clearInterval(cvvInterval);
-            let tiempo = 300; // 5 minutos
+            let tiempo = 300; 
             
             cvvInterval = setInterval(() => {
                 tiempo--;
@@ -611,6 +630,30 @@
             const nombre = document.getElementById('perfil-nombre').value;
             if(nombre) document.querySelector('.avatar').textContent = nombre.charAt(0).toUpperCase();
             window.toast('Datos de perfil actualizados.');
+        }
+
+        // Lógica de Ventana de Comprobante SPEI
+        window.mostrarComprobante = function(clabe, concepto, monto, fecha) {
+            const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+            const referencia = Math.floor(100000 + Math.random() * 900000);
+            const claveRastreo = 'HEY' + Math.floor(Math.random() * 1000000000);
+
+            const contentHtml = `
+                <div class="receipt-row"><span>Monto:</span><strong>${formatter.format(monto)} MXN</strong></div>
+                <div class="receipt-row"><span>Destino (CLABE):</span><strong>${clabe}</strong></div>
+                <div class="receipt-row"><span>Concepto:</span><strong>${concepto}</strong></div>
+                <div class="receipt-row"><span>Fecha Emisión:</span><strong>${fecha}</strong></div>
+                <div class="receipt-row"><span>Referencia:</span><strong>${referencia}</strong></div>
+                <div class="receipt-row"><span>Clave de Rastreo:</span><strong style="font-family: monospace; font-size:0.8rem;">${claveRastreo}</strong></div>
+                <div class="receipt-row" style="margin-top: 5px;"><span>Institución Emisora:</span><strong>Hey Banco (SPEI)</strong></div>
+            `;
+            document.getElementById('receipt-content').innerHTML = contentHtml;
+            document.getElementById('modal-comprobante').classList.add('active');
+        }
+
+        window.cerrarComprobante = function() {
+            document.getElementById('modal-comprobante').classList.remove('active');
+            window.nav('inicio');
         }
 
 
@@ -649,7 +692,6 @@
             list.innerHTML = '';
             const formatter = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2 });
 
-            // Aplicar Filtro
             const filtrados = dataArray.filter(m => currentFilter === 'todos' || m.tipo === currentFilter);
 
             if(filtrados.length === 0) {
@@ -663,7 +705,6 @@
                 const colorMonto = isGasto ? 'var(--text-main)' : 'var(--success)';
                 const signo = isGasto ? '-' : '+';
                 
-                // Botón PDF embebido
                 const btnPdfStr = `<button class="pdf-btn" onclick="descargarPDF('${m.conc}')">📄 PDF</button>`;
 
                 list.innerHTML += `
@@ -700,7 +741,7 @@
             const clabe = document.getElementById('t-clabe').value;
             const conc = document.getElementById('t-concepto').value;
             const monto = parseFloat(document.getElementById('t-monto').value);
-            const fechaProg = document.getElementById('t-fecha').value; // Para la función programada
+            const fechaProg = document.getElementById('t-fecha').value; 
 
             if(document.getElementById('toggle-lock').checked) {
                 return window.toast('Desbloquea la tarjeta en "Seguridad" para transferir.', 'error');
@@ -747,7 +788,8 @@
                 document.getElementById('t-monto').value = '';
                 document.getElementById('t-fecha').value = '';
                 
-                window.nav('inicio');
+                // Muestra el comprobante detallado de la transferencia
+                window.mostrarComprobante(clabe, conc, monto, fechaTexto);
                 
             } catch (error) {
                 console.error(error);
