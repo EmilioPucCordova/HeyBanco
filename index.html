@@ -251,7 +251,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 .pay-strip{background:var(--bg-elevated);border-radius:16px;padding:.9rem;display:flex;flex-direction:column;gap:.7rem}
 .pay-row{display:flex;justify-content:space-between;gap:1rem}
 .pay-row strong{font-size:1.05rem}
-.st{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:.25rem .65rem;border-radius:999px}
+.st{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:.25rem .65rem;border-radius:999px}
 .st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
 .st-ok{color:var(--success);background:rgba(34,197,94,.12)}
 .st-warn{color:var(--warning);background:rgba(245,158,11,.14)}
@@ -260,6 +260,62 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 .tj-pay{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border);font-size:.9rem}
 .tj-pay:last-child{border-bottom:0}
 @media(min-width:700px){.cc-grid{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(3,1fr);overflow:visible;margin:0;padding:0}}
+/* ===== Tarjetas realistas ===== */
+.vc-scene{container-type:inline-size;perspective:1400px}
+.vc-scene .vc{box-shadow:0 18px 28px -10px rgba(0,0,0,.55)}
+.vc{position:relative;aspect-ratio:1.586/1;border-radius:4.2cqw;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.8,.2,1);color:var(--ink,#fff);user-select:none;-webkit-user-select:none}
+.vc.fis{cursor:pointer}
+.vc.flipped{transform:rotateY(180deg)}
+.vc.anim{animation:vswap .75s cubic-bezier(.3,.7,.2,1)}
+@keyframes vswap{0%{transform:rotateY(-100deg) scale(.94);opacity:0}100%{transform:none;opacity:1}}
+.vf{position:absolute;inset:0;border-radius:4.2cqw;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;padding:5.4cqw 6.2cqw;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 6px rgba(0,0,0,.25)}
+.vf.back{transform:rotateY(180deg);padding:0;justify-content:flex-start}
+.vf>*{position:relative;z-index:2}
+.vf::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 28%,rgba(255,255,255,.22) 44%,rgba(255,255,255,.06) 52%,transparent 66%)}
+.vc.fis .vf::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-radial-gradient(circle at 85% 125%,rgba(255,255,255,.07) 0 1.5px,transparent 1.5px 6px),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
+.vc.dig .vf::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 12% -10%,rgba(255,255,255,.32),transparent 46%),radial-gradient(circle at 105% 110%,rgba(0,0,0,.4),transparent 52%),radial-gradient(circle at 70% 20%,rgba(255,255,255,.08),transparent 30%)}
+.vtop{display:flex;justify-content:space-between;align-items:flex-start}
+.vbrand{font-weight:800;font-size:4.6cqw;letter-spacing:-.3px;line-height:1.05}
+.vbrand small{display:block;font-weight:600;font-size:2.7cqw;letter-spacing:.18em;text-transform:uppercase;opacity:.75;margin-top:.5cqw}
+.vcl{width:7cqw;height:7cqw;opacity:.9}
+.vpill{display:inline-flex;align-items:center;gap:1.2cqw;font-size:2.6cqw;font-weight:700;letter-spacing:.14em;padding:1.1cqw 2.6cqw;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.vpill::before{content:'';width:1.6cqw;height:1.6cqw;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80}
+.vchip{width:13.5cqw;height:10.3cqw;border-radius:1.9cqw;background:linear-gradient(90deg,transparent 31%,rgba(0,0,0,.3) 31% 33%,transparent 33% 67%,rgba(0,0,0,.3) 67% 69%,transparent 69%),linear-gradient(0deg,transparent 44%,rgba(0,0,0,.3) 44% 56%,transparent 56%),linear-gradient(135deg,#f8e4a4,#d3a645 52%,#92661f);box-shadow:inset 0 0 0 1px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5)}
+.vnum{font-family:ui-monospace,'SF Mono','Courier New',monospace;font-size:5.7cqw;letter-spacing:.1em;font-weight:600;white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.28),0 -1px 1px rgba(0,0,0,.5)}
+.vc.dig .vnum{font-weight:500;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.vbot{display:flex;justify-content:space-between;align-items:flex-end;gap:3cqw}
+.vhold{display:flex;align-items:flex-end;gap:5cqw;min-width:0}
+.vexp small,.vg small{display:block;font-size:2.3cqw;letter-spacing:.12em;opacity:.7;font-weight:600;line-height:1.15}
+.vexp{display:flex;align-items:center;gap:1.6cqw}
+.vexp b{font-family:ui-monospace,'Courier New',monospace;font-size:4.2cqw;letter-spacing:.06em;text-shadow:0 1px 0 rgba(255,255,255,.25),0 -1px 1px rgba(0,0,0,.45)}
+.vname{font-size:3.7cqw;letter-spacing:.1em;font-weight:600;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 0 rgba(255,255,255,.2),0 -1px 1px rgba(0,0,0,.4)}
+.vg{display:grid;grid-template-columns:auto auto 1fr auto;gap:5cqw;align-items:end}
+.vg b{font-family:ui-monospace,'Courier New',monospace;font-size:4.2cqw;font-weight:600;letter-spacing:.08em}
+.vg .vname{font-family:inherit;font-size:3.4cqw}
+.vvisa{font-style:italic;font-weight:900;font-size:7.4cqw;letter-spacing:-.04em;line-height:1;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.vmc{display:flex;align-items:center}
+.vmc i{width:8.6cqw;height:8.6cqw;border-radius:50%;background:#eb001b;opacity:.95}
+.vmc i+i{background:#f79e1b;margin-left:-3.4cqw;mix-blend-mode:normal;opacity:.92}
+.vstripe{height:17%;background:linear-gradient(#0a0a0a,#1b1b1b);margin-top:7cqw;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.vsig{display:flex;align-items:stretch;margin:5cqw 6.2cqw 0;height:11cqw}
+.vsig .lines{flex:1;border-radius:1.2cqw 0 0 1.2cqw;background:repeating-linear-gradient(135deg,#f3efe4 0 2px,#e1dccb 2px 4px);display:flex;align-items:center;padding:0 2.4cqw;font-size:2.4cqw;color:#7b7566;letter-spacing:.1em;font-style:italic}
+.vsig .cvc{width:20cqw;background:#fff;color:#111;border-radius:0 1.2cqw 1.2cqw 0;display:grid;place-items:center;font-family:ui-monospace,'Courier New',monospace;font-weight:700;font-size:4.8cqw;letter-spacing:.14em;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.vcvl{margin:1.4cqw 6.2cqw 0;text-align:right;font-size:2.3cqw;letter-spacing:.16em;opacity:.75;padding-right:1cqw}
+.vfine{margin:3.6cqw 6.2cqw 0;font-size:2.35cqw;line-height:1.45;opacity:.72}
+.vbk-foot{margin:auto 6.2cqw 5cqw;display:flex;justify-content:space-between;align-items:center;font-size:2.6cqw;letter-spacing:.14em;font-weight:700;opacity:.9}
+.vmodes{margin-bottom:.1rem}
+.vact{display:flex;gap:.45rem}
+.vact button{flex:1;min-height:40px;font-size:.78rem;font-weight:600;border-radius:12px;padding:.3rem .4rem}
+.vlim{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:.5rem 1rem}
+.vlim .big{font-size:1.25rem;font-weight:800;letter-spacing:-.4px}
+.vmini{display:flex;flex-direction:column;background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:.1rem .8rem}
+.vmini div{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.vmini div:last-child{border-bottom:0}
+.vmini span{color:var(--text-muted)}
+.vmini strong{text-align:right}
+.vmeter{height:10px;border-radius:6px;background:var(--border);overflow:hidden;display:flex;position:relative}
+.vmeter i{display:block;height:100%;border-radius:6px;transition:width .6s ease}
+.vticks{display:flex;justify-content:space-between;font-size:.66rem;color:var(--text-muted);margin-top:-.35rem}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1086,7 +1142,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         window.guardarPerfil = function() {
             const nombre = document.getElementById('perfil-nombre').value;
             if(nombre) document.querySelector('.avatar').textContent = nombre.charAt(0).toUpperCase();
-            window.toast('Datos de perfil actualizados.');
+            renderCredito(); window.toast('Datos de perfil actualizados.');
         }
 
         // Lógica de Ventana de Comprobante SPEI
@@ -1326,9 +1382,9 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 
         // --- Tarjetas de crédito (datos de demostración; solo se muestran los últimos 4 dígitos) ---
         const TARJ_BASE = [
-            { n: 'Hey Platinum', l4: '7741', lim: 344400, usado: 62480.35, corte: 12, bg: 'linear-gradient(135deg,#1d4ed8,#0b1b4a)' },
-            { n: 'Hey Oro', l4: '3305', lim: 159000, usado: 18725.90, corte: 20, bg: 'linear-gradient(135deg,#b8862b,#3a2a0c)' },
-            { n: 'Pointbuy Negocios', l4: '9168', lim: 532200, usado: 41310.00, corte: 5, bg: 'linear-gradient(135deg,#0f766e,#052e2b)' }
+            { n: 'Hey Platinum', tier: 'Platinum', net: 'visa', num: '4152030318611162', exp: '09/31', cvc: '482', l4: '1162', lim: 344400, usado: 62480.35, corte: 12, ink: '#f1f5f9', bg: 'linear-gradient(135deg,#4b5563 0%,#1f2937 38%,#0b1220 70%,#1e293b 100%)' },
+            { n: 'Hey Oro', tier: 'Oro', net: 'mc', num: '5204173268091210', exp: '03/30', cvc: '917', l4: '1210', lim: 159000, usado: 18725.90, corte: 20, ink: '#2b1d05', bg: 'linear-gradient(135deg,#f6e3a1 0%,#d9a93f 35%,#b8862b 62%,#e9cd7c 100%)' },
+            { n: 'Pointbuy Negocios', tier: 'Business', net: 'visa', num: '4916743010957272', exp: '11/30', cvc: '305', l4: '7272', lim: 532200, usado: 41310.00, corte: 5, ink: '#e6fffb', bg: 'linear-gradient(135deg,#14b8a6 0%,#0f766e 35%,#064e45 68%,#022c27 100%)' }
         ];
         function proxFecha(dia, suma = 0) {
             const h = new Date(); let d = new Date(h.getFullYear(), h.getMonth(), dia);
@@ -1337,7 +1393,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
         }
         let tarjetas = [];
-        const TARJ_VER = 2; // súbela cuando cambies los límites de TARJ_BASE para actualizarlos en Firebase
+        const TARJ_VER = 3; // súbela cuando cambies los límites de TARJ_BASE para actualizarlos en Firebase
         async function sembrarTarjetas() {
             try {
                 const snap = await getDoc(cuentaRef);
@@ -1349,7 +1405,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
                     const docs = await getDocs(tarjRef);
                     for(const d of docs.docs) {
                         const base = TARJ_BASE.find(b => b.n === d.data().n);
-                        if(base) await setDoc(d.ref, { lim: base.lim }, { merge: true });
+                        if(base) { const { usado, corte, ...fijos } = base; await setDoc(d.ref, fijos, { merge: true }); }
                     }
                     await setDoc(cuentaRef, { tarjVer: TARJ_VER }, { merge: true });
                 }
@@ -1357,7 +1413,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         }
         function escucharTarjetas() {
             onSnapshot(query(tarjRef, orderBy('creado')), (snap) => {
-                tarjetas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                tarjetas = snap.docs.map(d => ({ ...(TARJ_BASE.find(b => b.n === d.data().n) || {}), id: d.id, ...d.data() }));
                 renderCredito();
             });
         }
@@ -1375,30 +1431,87 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             return { c: 'st-ok', txt: 'Al corriente', dias };
         }
 
+        // Estado visual por tarjeta: modo (fis/dig), girada y datos sensibles visibles
+        const modoT = {}, revT = {}, flipT = {}, revTimer = {};
+        let animId = null;
+        const grupos = n => String(n).replace(/(\d{4})(?=\d)/g, '$1 ');
+        const titular = () => ((document.getElementById('perfil-nombre') || {}).value || 'Emi').trim().toUpperCase();
+        const logoRed = n => n === 'mc' ? '<div class="vmc" aria-label="Mastercard"><i></i><i></i></div>' : '<div class="vvisa" aria-label="Visa">VISA</div>';
+        const ICON_CL = '<svg class="vcl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 8a6 6 0 0 1 0 8M12 5a10 10 0 0 1 0 14M16 2.5a14 14 0 0 1 0 19"/></svg>';
+
+        function caraTarjeta(t) {
+            const m = modoT[t.id] || 'fis', rev = !!revT[t.id];
+            const num = t.num || ('4000000000' + '00' + t.l4);
+            const numTxt = (!isPrivate || rev) ? grupos(num) : '•••• •••• •••• ' + t.l4;
+            const cvc = rev ? (t.cvc || '000') : '•••';
+            const exp = t.exp || '12/30';
+            const marca = `<div class="vbrand">Hey Banco<small>${esc(t.tier || t.n)}</small></div>`;
+            if(m === 'dig') return `<div class="vf" style="--bg:${t.bg}">
+                <div class="vtop">${marca}<span class="vpill">DIGITAL</span></div>
+                <div class="vnum">${numTxt}</div>
+                <div class="vbot"><div class="vg"><div><small>VENCE</small><b>${esc(exp)}</b></div><div><small>CVC</small><b>${cvc}</b></div><div style="min-width:0"><small>TITULAR</small><div class="vname">${esc(titular())}</div></div></div>${logoRed(t.net)}</div>
+            </div>`;
+            return `<div class="vf" style="--bg:${t.bg}">
+                <div class="vtop">${marca}${ICON_CL}</div>
+                <div><div class="vchip"></div></div>
+                <div class="vnum">${numTxt}</div>
+                <div class="vbot"><div class="vhold"><div class="vexp"><small>VÁLIDA<br>HASTA</small><b>${esc(exp)}</b></div><div class="vname">${esc(titular())}</div></div>${logoRed(t.net)}</div>
+            </div>
+            <div class="vf back" style="--bg:${t.bg}">
+                <div class="vstripe"></div>
+                <div class="vsig"><div class="lines">Firma autorizada</div><div class="cvc">${cvc}</div></div>
+                <div class="vcvl">CVC</div>
+                <div class="vfine">Tarjeta intransferible. Si la encuentras, repórtala al 800 000 4392 o en la app de Hey Banco. Uso sujeto al contrato vigente.</div>
+                <div class="vbk-foot"><span>HEY BANCO</span>${logoRed(t.net)}</div>
+            </div>`;
+        }
+
         function renderCredito() {
             const el = document.getElementById('ui-credito'); if(!el) return;
             if(!tarjetas.length) { el.innerHTML = '<div class="text-sm">Cargando tarjetas…</div>'; return; }
+            const sl = el.scrollLeft;
             const lim = tarjetas.reduce((a, t) => a + t.lim, 0), usado = tarjetas.reduce((a, t) => a + t.usado, 0);
             document.getElementById('ui-credito-sum').innerHTML =
                 `<div class="tj-kv"><span>Límite total</span><strong>${mxn(lim)}</strong></div><div class="tj-kv"><span>Disponible</span><strong style="color:var(--success)">${mxn(lim - usado)}</strong></div><div class="tj-kv"><span>Saldo usado</span><strong>${mxn(usado)}</strong></div>`;
-            el.innerHTML = tarjetas.map((t, i) => {
+            el.innerHTML = tarjetas.map((t) => {
+                const m = modoT[t.id] || 'fis', rev = !!revT[t.id];
                 const pct = Math.min(100, t.usado / t.lim * 100), st = estadoPago(t);
                 const col = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warning)' : 'var(--accent)';
+                const cls = `vc ${m}${flipT[t.id] && m === 'fis' ? ' flipped' : ''}${animId === t.id ? ' anim' : ''}`;
                 return `<div class="cw">
-                    <div class="cc" style="background:${t.bg}" role="button" tabindex="0" onclick="abrirTarjeta('${t.id}')" onkeydown="if(event.key==='Enter')abrirTarjeta('${t.id}')">
-                        <div class="flex-between"><span class="cc-name">${esc(t.n)}</span><span class="cc-net">${i % 2 ? 'MASTERCARD' : 'VISA'}</span></div>
-                        <div class="cc-mid"><div class="chip"></div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round"><path d="M8 8a6 6 0 0 1 0 8M12 5a10 10 0 0 1 0 14M16 2.5a14 14 0 0 1 0 19"/></svg></div>
-                        <div class="cc-num">•••• •••• •••• ${esc(t.l4)}</div>
-                        <div class="cc-bot"><div><div class="cc-lbl">Disponible</div><div class="cc-av">${mxn(t.lim - t.usado)}</div></div><div style="text-align:right"><div class="cc-lbl">Límite</div><strong>${mxn(t.lim)}</strong></div></div>
+                    <div class="seg vmodes" role="group" aria-label="Tipo de tarjeta"><button class="${m === 'fis' ? 'on' : ''}" onclick="setModoTarjeta('${t.id}','fis')">Física</button><button class="${m === 'dig' ? 'on' : ''}" onclick="setModoTarjeta('${t.id}','dig')">Digital</button></div>
+                    <div class="vc-scene"><div class="${cls}" data-id="${t.id}" ${m === 'fis' ? `onclick="flipTarjeta('${t.id}')" title="Toca para girar"` : ''}>${caraTarjeta(t)}</div></div>
+                    <div class="vact">
+                        <button class="btn-outline" onclick="toggleDatos('${t.id}')">${rev ? 'Ocultar CVC' : 'Ver CVC'}</button>
+                        <button class="btn-outline" onclick="copiarDato('${esc(t.num || '')}', 'Número de tarjeta')">Copiar número</button>
+                        ${m === 'fis' ? `<button class="btn-outline" onclick="flipTarjeta('${t.id}')">Girar</button>` : ''}
                     </div>
                     <div class="pay-strip">
-                        <div class="flex-between"><span class="st ${st.c}">${st.txt}</span><span class="text-sm">${Math.round(pct)}% usado</span></div>
-                        <div class="progress-bar-bg" style="margin:0"><div class="progress-bar-fill" style="background:${col};width:${pct}%"></div></div>
-                        <div class="pay-row"><div><div class="text-sm">Para no generar intereses</div><strong>${mxn(t.usado)}</strong></div><div style="text-align:right"><div class="text-sm">Fecha límite</div><strong>${fmtF(limitePago(t.corte))}</strong></div></div>
+                        <div class="vlim"><div><div class="text-sm">Límite de crédito</div><div class="big">${mxn(t.lim)}</div></div><span class="st ${st.c}">${st.txt}</span></div>
+                        <div class="vmeter" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100"><i style="background:${col};width:${pct}%"></i></div>
+                        <div class="vticks"><span>${Math.round(pct)}% utilizado</span><span>Disponible ${mxn(t.lim - t.usado)}</span></div>
+                        <div class="vmini"><div><span>Saldo usado</span><strong>${mxn(t.usado)}</strong></div><div><span>Pago mínimo</span><strong>${mxn(pagoMin(t))}</strong></div><div><span>Fecha límite</span><strong>${fmtF(limitePago(t.corte))}</strong></div></div>
+                        <div class="pay-row"><div><div class="text-sm">Para no generar intereses</div><strong>${mxn(t.usado)}</strong></div><div style="text-align:right"><div class="text-sm">Próximo corte</div><strong>${fmtF(proxCorte(t.corte))}</strong></div></div>
                         <button class="btn" onclick="abrirTarjeta('${t.id}')" ${t.usado <= 0 ? 'disabled' : ''}>Pagar tarjeta</button>
                     </div></div>`;
             }).join('');
+            el.scrollLeft = sl;
             if(document.getElementById('modal-tarj').classList.contains('active')) pintarTarjeta();
+        }
+        window.setModoTarjeta = function(id, m) {
+            if(modoT[id] === m || (!modoT[id] && m === 'fis')) return;
+            modoT[id] = m; flipT[id] = false; animId = id; renderCredito(); animId = null;
+        }
+        window.flipTarjeta = function(id) {
+            if((modoT[id] || 'fis') !== 'fis') return;
+            flipT[id] = !flipT[id];
+            const c = document.querySelector(`.vc[data-id="${id}"]`);
+            if(c) c.classList.toggle('flipped', flipT[id]);
+        }
+        window.toggleDatos = function(id) {
+            revT[id] = !revT[id]; clearTimeout(revTimer[id]);
+            if(revT[id]) revTimer[id] = setTimeout(() => { revT[id] = false; renderCredito(); }, 20000);
+            renderCredito();
         }
 
         // --- Detalle y pago de tarjeta (se descuenta de la cuenta principal) ---
@@ -1409,7 +1522,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             const st = estadoPago(t);
             document.getElementById('tj-titulo').textContent = `${t.n} •••• ${t.l4}`;
             document.getElementById('tj-info').innerHTML = [
-                ['Límite', mxn(t.lim)], ['Disponible', mxn(t.lim - t.usado)], ['Saldo usado', mxn(t.usado)], ['Pago mínimo', mxn(pagoMin(t))],
+                ['Límite de crédito', mxn(t.lim)], ['Crédito disponible', mxn(t.lim - t.usado)], ['Saldo usado', mxn(t.usado)], ['Pago mínimo', mxn(pagoMin(t))],
                 ['Próximo corte', fmtF(proxCorte(t.corte))], ['Fecha límite de pago', fmtF(limitePago(t.corte))]
             ].map(([k, v]) => `<div class="tj-kv"><span>${k}</span><strong>${v}</strong></div>`).join('');
             document.getElementById('tj-cuenta').textContent = mxn(saldoActual);
