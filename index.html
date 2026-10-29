@@ -6,6 +6,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#06080c">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>Hey Banco - Pro Dashboard</title>
@@ -187,6 +188,13 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 .sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;text-align:left}
 .sheet-head h3{margin:0}
 .history-item.ing .h-icon{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+.gd{background:var(--bg-elevated);padding:1rem;border-radius:14px;margin-bottom:.75rem}
+.gd:last-child{margin-bottom:0}
+.gd-actions{display:flex;gap:.4rem;margin-top:.85rem}
+.gd-actions button{flex:1;min-height:38px;font-size:.8rem;font-weight:600;padding:.3rem}
+.gd-actions .ic{flex:none;width:42px}
+.gd-actions .del{color:var(--danger)}
+.fd-info{display:flex;justify-content:space-between;gap:1rem;margin:1rem 0 .25rem;font-size:.85rem;color:var(--text-muted)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -259,22 +267,8 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 
                         <!-- Guardaditos -->
                         <div class="panel" id="pnl-save">
-                            <h3 class="panel-title flex-between">Mis Guardaditos <button class="btn-outline" style="padding: 2px 10px; border-radius:5px;" onclick="toast('Creación de guardadito en desarrollo.')">+</button></h3>
-                            
-                            <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                                <div class="flex-between"><strong>Guardadito</strong> <span class="text-sm"><span class="sensitive-data">$8,500</span> / $10,000</span></div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="background: var(--success); width: 85%;"></div></div>
-                            </div>
-                            
-                            <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                                <div class="flex-between"><strong>Renta</strong> <span class="text-sm"><span class="sensitive-data">2,342</span> / $10,000</span></div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="background: var(--accent); width: 30%;"></div></div>
-                            </div>
-
-                            <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 12px;">
-                                <div class="flex-between"><strong>Negocio Dulces (Inventario)</strong> <span class="text-sm"><span class="sensitive-data">$1,200</span> / $5k</span></div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="background: var(--warning); width: 24%;"></div></div>
-                            </div>
+                            <h3 class="panel-title flex-between">Mis Guardaditos <button class="btn-outline" style="padding:2px 14px" onclick="abrirGuardadito()" aria-label="Nuevo guardadito">+</button></h3>
+                            <div id="ui-guardaditos"></div>
                         </div>
                     </div>
 
@@ -283,7 +277,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                         <div class="panel" id="pnl-mov">
                             <div class="flex-between" style="margin-bottom: 1rem;">
                                 <h3 class="panel-title" style="margin:0;">Movimientos</h3>
-                                <div class="flex-gap" style="gap:.6rem"><div id="db-status" class="loader"></div><button class="btn" style="width:auto;min-height:38px;padding:.4rem .9rem;font-size:.85rem" onclick="abrirMov()">+ Registrar</button></div>
+                                <div class="flex-gap" style="gap:.6rem"><div id="db-status" class="loader"></div></div>
                             </div>
                             
                             <!-- Filtros -->
@@ -466,6 +460,8 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                 <div class="seg" id="tema-seg"><button data-t="dark" onclick="setTema('dark')">Oscuro</button><button data-t="light" onclick="setTema('light')">Claro</button></div></div>
             <div class="cfg-row"><div><strong>Ocultar saldos</strong><div class="text-sm">Muestra *** en lugar de montos</div></div>
                 <label class="switch"><input type="checkbox" id="cfg-priv" onchange="togglePrivacidad()"><span class="slider"></span></label></div>
+            <div class="cfg-row"><div><strong>Registrar movimiento</strong><div class="text-sm">Guarda un gasto o ingreso</div></div>
+                <button class="btn-outline" style="padding:.5rem 1rem" onclick="cerrarConfig();abrirMov()">Registrar</button></div>
             <div class="cfg-row"><div><strong>Perfil</strong><div class="text-sm">Nombre, correo y teléfono</div></div>
                 <button class="btn-outline" style="padding:.5rem 1rem" onclick="cerrarConfig();nav('ajustes')">Editar</button></div>
         </div>
@@ -480,6 +476,27 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
             <label class="text-sm">Concepto</label><input type="text" id="mov-conc" placeholder="Ej. Despensa">
             <label class="text-sm">Monto (MXN)</label><input type="number" id="mov-monto" inputmode="decimal" placeholder="$0.00">
             <button class="btn" id="btn-mov" style="margin-top:1.25rem" onclick="guardarMov()">Guardar movimiento</button>
+        </div>
+    </div>
+
+    <!-- Guardadito: crear / editar -->
+    <div class="modal-overlay" id="modal-gd" onclick="if(event.target===this)cerrarGuardadito()">
+        <div class="comprobante-box" style="text-align:left">
+            <div class="sheet-head"><h3 id="gd-titulo">Nuevo guardadito</h3><button class="icon-btn" onclick="cerrarGuardadito()" aria-label="Cerrar">✕</button></div>
+            <label class="text-sm">Nombre</label><input type="text" id="gd-nombre" placeholder="Ej. Vacaciones" maxlength="40">
+            <label class="text-sm">Meta (MXN)</label><input type="number" id="gd-meta" inputmode="decimal" placeholder="$0.00">
+            <button class="btn" id="btn-gd" style="margin-top:1.25rem" onclick="guardarGuardadito()">Guardar</button>
+        </div>
+    </div>
+
+    <!-- Guardadito: agregar / retirar dinero -->
+    <div class="modal-overlay" id="modal-fondos" onclick="if(event.target===this)cerrarFondos()">
+        <div class="comprobante-box" style="text-align:left">
+            <div class="sheet-head"><h3 id="fd-titulo">Guardadito</h3><button class="icon-btn" onclick="cerrarFondos()" aria-label="Cerrar">✕</button></div>
+            <div class="seg" id="fd-seg"><button data-t="add" onclick="setModoFondos('add')">Agregar</button><button data-t="sacar" onclick="setModoFondos('sacar')">Retirar</button></div>
+            <div class="fd-info"><span>Cuenta principal: <strong id="fd-cuenta"></strong></span><span>Guardadito: <strong id="fd-ahorro"></strong></span></div>
+            <label class="text-sm">Monto (MXN)</label><input type="number" id="fd-monto" inputmode="decimal" placeholder="$0.00">
+            <button class="btn" id="btn-fd" style="margin-top:1.25rem" onclick="confirmarFondos()">Confirmar</button>
         </div>
     </div>
 
@@ -501,7 +518,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
     <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc, setDoc, deleteDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         // Nueva Configuración de Base de Datos Vinculada
         const firebaseConfig = {
@@ -518,6 +535,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
         const db = getFirestore(app);
         const movRef = collection(db, "movimientos");
         const cuentaRef = doc(db, "cuenta", "principal");
+        const gdRef = collection(db, "guardaditos");
 
         // Variables Globales
         const SALDO_INICIAL = 102347.24;
@@ -545,7 +563,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
             guardarPref({ privado: isPrivate });
         }
         function aplicarPriv() {
-            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements);
+            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements); renderGuardaditos();
             const c = document.getElementById('cfg-priv'); if(c) c.checked = isPrivate;
         }
         function guardarPref(o) { setDoc(cuentaRef, o, { merge: true }).catch(console.error); }
@@ -686,9 +704,159 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
             renderizarHistorial(allMovements);
         }
 
+        // --- Comprobante PDF ---
+        let ultimoComprobante = null;
+        window.generarPDF = function(d) {
+            if(!window.jspdf) return window.toast('No se pudo cargar el generador de PDF. Revisa tu conexión.', 'error');
+            const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+            const W = 210;
+            const monto = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(d.monto);
+            pdf.setFillColor(29, 78, 216); pdf.rect(0, 0, W, 38, 'F');
+            pdf.setTextColor(255, 255, 255); pdf.setFont('helvetica', 'bold'); pdf.setFontSize(22); pdf.text('Hey Banco', 20, 24);
+            pdf.setFont('helvetica', 'normal'); pdf.setFontSize(10); pdf.text(d.titulo, W - 20, 24, { align: 'right' });
+            pdf.setTextColor(100, 116, 139); pdf.setFontSize(10); pdf.text('Monto', 20, 56);
+            pdf.setTextColor(15, 23, 42); pdf.setFont('helvetica', 'bold'); pdf.setFontSize(30); pdf.text(`${monto} MXN`, 20, 70);
+            const prog = String(d.fecha).startsWith('Prog');
+            const filas = [['Concepto', d.concepto], ['Destino (CLABE)', d.clabe], ['Fecha', d.fecha], ['Referencia', d.referencia], ['Clave de rastreo', d.claveRastreo], ['Institución emisora', 'Hey Banco (SPEI)'], ['Estatus', prog ? 'Programada' : 'Aplicada']].filter(f => f[1]);
+            let y = 92;
+            filas.forEach(([k, v]) => {
+                pdf.setFont('helvetica', 'normal'); pdf.setFontSize(10); pdf.setTextColor(100, 116, 139); pdf.text(k, 20, y);
+                pdf.setFont('helvetica', 'bold'); pdf.setFontSize(11); pdf.setTextColor(15, 23, 42); pdf.text(String(v), W - 20, y, { align: 'right', maxWidth: 110 });
+                pdf.setDrawColor(226, 232, 240); pdf.line(20, y + 4, W - 20, y + 4); y += 13;
+            });
+            pdf.setFont('helvetica', 'normal'); pdf.setFontSize(8); pdf.setTextColor(148, 163, 184);
+            pdf.text('Representación digital generada por Hey Banco. Conserva este documento como respaldo de tu operación.', 20, 280);
+            pdf.save(`Comprobante-${d.claveRastreo}.pdf`);
+            window.toast('Comprobante PDF generado.');
+        }
         window.descargarPDF = function(concepto) {
-            window.toast(`Generando comprobante PDF para: ${concepto}...`);
-            setTimeout(() => window.toast('Comprobante descargado con éxito.', 'success'), 1500);
+            if(concepto === 'Comprobante SPEI' && ultimoComprobante) return window.generarPDF(ultimoComprobante);
+            const m = allMovements.find(x => x.conc === concepto);
+            if(!m) return window.toast('No se encontró el movimiento.', 'error');
+            const t = String(m.timestamp || '');
+            window.generarPDF({ titulo: m.tipo === 'gasto' ? 'Comprobante de gasto' : 'Comprobante de ingreso', concepto: m.conc, monto: m.monto, fecha: m.fecha || '', referencia: t.slice(-6), claveRastreo: 'HEY' + t.slice(-9) });
+        }
+
+        // --- Guardaditos (Firestore: colección "guardaditos") ---
+        const COLORES = ['var(--success)', 'var(--accent)', 'var(--warning)', '#a78bfa', '#f472b6'];
+        const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const mxn = n => isPrivate ? '***' : new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(n);
+        const r2 = n => Math.round(n * 100) / 100;
+        let guardaditos = [], gdEdit = null, fdId = null, fdModo = 'add';
+
+        function renderGuardaditos() {
+            const el = document.getElementById('ui-guardaditos');
+            if(!guardaditos.length) { el.innerHTML = '<div class="text-sm" style="text-align:center;padding:1rem">Aún no tienes guardaditos. Crea uno con el botón +.</div>'; return; }
+            el.innerHTML = guardaditos.map((g, i) => {
+                const pct = g.meta > 0 ? Math.min(100, g.ahorrado / g.meta * 100) : 0;
+                return `<div class="gd">
+                    <div class="flex-between"><strong>${esc(g.nombre)}</strong><span class="text-sm">${mxn(g.ahorrado)} / ${mxn(g.meta)}</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="background:${COLORES[(g.color ?? i) % 5]};width:${pct}%"></div></div>
+                    <div class="gd-actions">
+                        <button class="btn-outline" onclick="abrirFondos('${g.id}','add')">Agregar</button>
+                        <button class="btn-outline" onclick="abrirFondos('${g.id}','sacar')">Retirar</button>
+                        <button class="btn-outline ic" onclick="abrirGuardadito('${g.id}')" aria-label="Editar">✎</button>
+                        <button class="btn-outline ic del" onclick="borrarGuardadito('${g.id}')" aria-label="Eliminar">🗑</button>
+                    </div></div>`;
+            }).join('');
+        }
+
+        async function sembrarGuardaditos() {
+            try {
+                const snap = await getDoc(cuentaRef);
+                if(snap.exists() && snap.data().gdSembrado) return;
+                const base = [['Guardadito', 8500, 10000, 0], ['Renta', 2342, 10000, 1], ['Pago deudas', 17480, 34000, 2]];
+                for(let i = 0; i < base.length; i++) await addDoc(gdRef, { nombre: base[i][0], ahorrado: base[i][1], meta: base[i][2], color: base[i][3], creado: Date.now() + i });
+                await setDoc(cuentaRef, { gdSembrado: true }, { merge: true });
+            } catch (e) { console.error(e); }
+        }
+        function escucharGuardaditos() {
+            onSnapshot(query(gdRef, orderBy('creado')), (snap) => {
+                guardaditos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderGuardaditos();
+            });
+        }
+
+        window.abrirGuardadito = function(id) {
+            gdEdit = id || null;
+            const g = guardaditos.find(x => x.id === id);
+            document.getElementById('gd-titulo').textContent = g ? 'Editar guardadito' : 'Nuevo guardadito';
+            document.getElementById('gd-nombre').value = g ? g.nombre : '';
+            document.getElementById('gd-meta').value = g ? g.meta : '';
+            document.getElementById('modal-gd').classList.add('active');
+        }
+        window.cerrarGuardadito = () => document.getElementById('modal-gd').classList.remove('active');
+        window.guardarGuardadito = async function() {
+            const nombre = document.getElementById('gd-nombre').value.trim();
+            const meta = parseFloat(document.getElementById('gd-meta').value);
+            if(!nombre || isNaN(meta) || meta <= 0) return window.toast('Escribe un nombre y una meta mayor a 0.', 'error');
+            const btn = document.getElementById('btn-gd'); btn.disabled = true;
+            try {
+                if(gdEdit) await setDoc(doc(gdRef, gdEdit), { nombre, meta }, { merge: true });
+                else await addDoc(gdRef, { nombre, meta, ahorrado: 0, color: guardaditos.length % 5, creado: Date.now() });
+                window.cerrarGuardadito();
+                window.toast(gdEdit ? 'Guardadito actualizado.' : 'Guardadito creado.');
+            } catch (e) { console.error(e); window.toast('No se pudo guardar. Revisa tu conexión.', 'error'); }
+            finally { btn.disabled = false; }
+        }
+
+        function pintarFondos() {
+            const g = guardaditos.find(x => x.id === fdId); if(!g) return;
+            document.querySelectorAll('#fd-seg button').forEach(b => b.classList.toggle('on', b.dataset.t === fdModo));
+            document.getElementById('fd-titulo').textContent = g.nombre;
+            document.getElementById('fd-cuenta').textContent = mxn(saldoActual);
+            document.getElementById('fd-ahorro').textContent = mxn(g.ahorrado);
+            document.getElementById('btn-fd').textContent = fdModo === 'add' ? 'Agregar al guardadito' : 'Retirar a mi cuenta';
+        }
+        window.abrirFondos = function(id, modo) {
+            fdId = id; fdModo = modo; document.getElementById('fd-monto').value = '';
+            pintarFondos(); document.getElementById('modal-fondos').classList.add('active');
+        }
+        window.setModoFondos = m => { fdModo = m; pintarFondos(); }
+        window.cerrarFondos = () => document.getElementById('modal-fondos').classList.remove('active');
+        window.confirmarFondos = async function() {
+            const monto = parseFloat(document.getElementById('fd-monto').value);
+            if(isNaN(monto) || monto <= 0) return window.toast('Ingresa un monto mayor a 0.', 'error');
+            const btn = document.getElementById('btn-fd'); btn.disabled = true;
+            try {
+                await runTransaction(db, async (tx) => {
+                    const gRef = doc(gdRef, fdId);
+                    const gs = await tx.get(gRef), cs = await tx.get(cuentaRef);
+                    if(!gs.exists()) throw new Error('NO_EXISTE');
+                    const saldo = cs.exists() && typeof cs.data().saldo === 'number' ? cs.data().saldo : SALDO_INICIAL;
+                    const ah = gs.data().ahorrado || 0;
+                    if(fdModo === 'add') {
+                        if(monto > saldo) throw new Error('SIN_FONDOS');
+                        tx.set(cuentaRef, { saldo: r2(saldo - monto) }, { merge: true });
+                        tx.set(gRef, { ahorrado: r2(ah + monto) }, { merge: true });
+                    } else {
+                        if(monto > ah) throw new Error('SIN_AHORRO');
+                        tx.set(cuentaRef, { saldo: r2(saldo + monto) }, { merge: true });
+                        tx.set(gRef, { ahorrado: r2(ah - monto) }, { merge: true });
+                    }
+                });
+                window.cerrarFondos();
+                window.toast(fdModo === 'add' ? 'Dinero agregado al guardadito.' : 'Dinero devuelto a tu cuenta principal.');
+            } catch (e) {
+                const msg = { SIN_FONDOS: 'Fondos insuficientes en la cuenta principal.', SIN_AHORRO: 'El guardadito no tiene ese monto.' }[e.message] || 'No se pudo completar. Revisa tu conexión.';
+                window.toast(msg, 'error');
+            } finally { btn.disabled = false; }
+        }
+        window.borrarGuardadito = async function(id) {
+            const g = guardaditos.find(x => x.id === id); if(!g) return;
+            const aviso = g.ahorrado > 0 ? ` Se devolverán ${mxn(g.ahorrado)} a tu cuenta principal.` : '';
+            if(!confirm(`¿Eliminar "${g.nombre}"?${aviso}`)) return;
+            try {
+                await runTransaction(db, async (tx) => {
+                    const gRef = doc(gdRef, id);
+                    const gs = await tx.get(gRef), cs = await tx.get(cuentaRef);
+                    if(!gs.exists()) return;
+                    const saldo = cs.exists() && typeof cs.data().saldo === 'number' ? cs.data().saldo : SALDO_INICIAL;
+                    tx.set(cuentaRef, { saldo: r2(saldo + (gs.data().ahorrado || 0)) }, { merge: true });
+                    tx.delete(gRef);
+                });
+                window.toast('Guardadito eliminado.');
+            } catch (e) { console.error(e); window.toast('No se pudo eliminar. Revisa tu conexión.', 'error'); }
         }
 
         window.calcularInversion = function() {
@@ -756,6 +924,8 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
             const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
             const referencia = Math.floor(100000 + Math.random() * 900000);
             const claveRastreo = 'HEY' + Math.floor(Math.random() * 1000000000);
+            ultimoComprobante = { titulo: 'Comprobante de transferencia SPEI', clabe, concepto, monto, fecha, referencia, claveRastreo };
+            setTimeout(() => window.generarPDF(ultimoComprobante), 400);
 
             const contentHtml = `
                 <div class="receipt-row"><span>Monto:</span><strong>${formatter.format(monto)} MXN</strong></div>
@@ -986,7 +1156,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
         // Inicialización
         pintarNav(); pintarTeclado();
         actualizarSaldos();
-        iniciarCuenta().then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
+        iniciarCuenta().then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
 
     </script>
 </body>
