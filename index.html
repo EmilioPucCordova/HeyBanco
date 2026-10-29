@@ -263,13 +263,14 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 /* ===== Tarjetas realistas ===== */
 .vc-scene{container-type:inline-size;perspective:1400px}
 .vc-scene .vc{box-shadow:0 18px 28px -10px rgba(0,0,0,.55)}
-.vc{position:relative;aspect-ratio:1.586/1;border-radius:4.2cqw;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.8,.2,1);color:var(--ink,#fff);user-select:none;-webkit-user-select:none}
+.vc{position:relative;aspect-ratio:1.586/1;border-radius:4.2cqw;color:var(--ink,#fff);user-select:none;-webkit-user-select:none}
 .vc.fis{cursor:pointer}
-.vc.flipped{transform:rotateY(180deg)}
 .vc.anim{animation:vswap .75s cubic-bezier(.3,.7,.2,1)}
-@keyframes vswap{0%{transform:rotateY(-100deg) scale(.94);opacity:0}100%{transform:none;opacity:1}}
-.vf{position:absolute;inset:0;border-radius:4.2cqw;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;padding:5.4cqw 6.2cqw;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 6px rgba(0,0,0,.25)}
-.vf.back{transform:rotateY(180deg);padding:0;justify-content:flex-start}
+@keyframes vswap{0%{transform:perspective(1200px) rotateY(-100deg) scale(.94);opacity:0}100%{transform:none;opacity:1}}
+.vf{position:absolute;inset:0;border-radius:4.2cqw;overflow:hidden;transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .45s ease;padding:5.4cqw 6.2cqw;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 6px rgba(0,0,0,.25)}
+.vf.back{padding:0;justify-content:flex-start;opacity:0;visibility:hidden;transform:perspective(1200px) rotateY(90deg)}
+.vc.flipped .vf:not(.back){opacity:0;visibility:hidden;transform:perspective(1200px) rotateY(-90deg)}
+.vc.flipped .vf.back{opacity:1;visibility:visible;transform:none}
 .vf>*{position:relative;z-index:2}
 .vf::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 28%,rgba(255,255,255,.22) 44%,rgba(255,255,255,.06) 52%,transparent 66%)}
 .vc.fis .vf::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-radial-gradient(circle at 85% 125%,rgba(255,255,255,.07) 0 1.5px,transparent 1.5px 6px),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
@@ -316,6 +317,72 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 .vmeter{height:10px;border-radius:6px;background:var(--border);overflow:hidden;display:flex;position:relative}
 .vmeter i{display:block;height:100%;border-radius:6px;transition:width .6s ease}
 .vticks{display:flex;justify-content:space-between;font-size:.66rem;color:var(--text-muted);margin-top:-.35rem}
+/* ===== Entrada animada ===== */
+.login{background:#05070b;transition:opacity .75s ease,transform .9s cubic-bezier(.4,0,.2,1),filter .9s ease}
+.login.out{opacity:0;transform:scale(1.07);filter:blur(10px);pointer-events:none}
+.lg-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
+.lg-bg::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1.3px);background-size:26px 26px;-webkit-mask-image:radial-gradient(70% 60% at 50% 38%,#000 15%,transparent 78%);mask-image:radial-gradient(70% 60% at 50% 38%,#000 15%,transparent 78%)}
+.lg-bg i{position:absolute;border-radius:50%;filter:blur(72px);will-change:transform}
+.lg-bg i:nth-child(1){width:48vmax;height:48vmax;left:-14vmax;top:-16vmax;background:#2563eb;opacity:.5;animation:orb1 15s ease-in-out infinite alternate}
+.lg-bg i:nth-child(2){width:40vmax;height:40vmax;right:-14vmax;top:16vh;background:#7c3aed;opacity:.36;animation:orb2 18s ease-in-out infinite alternate}
+.lg-bg i:nth-child(3){width:32vmax;height:32vmax;left:18vw;bottom:-18vmax;background:#06b6d4;opacity:.3;animation:orb3 20s ease-in-out infinite alternate}
+@keyframes orb1{to{transform:translate(9vmax,7vmax) scale(1.14)}}
+@keyframes orb2{to{transform:translate(-8vmax,-6vmax) scale(.9)}}
+@keyframes orb3{to{transform:translate(7vmax,-8vmax) scale(1.18)}}
+.login.out .lg-bg i{transition:transform 1s ease;transform:scale(1.6)}
+.login-box{position:relative;z-index:1}
+.lg-mark{width:70px;height:70px;margin:0 auto 1.15rem;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#60a5fa,#2563eb 55%,#7c3aed);box-shadow:0 14px 38px rgba(59,130,246,.45),inset 0 1px 0 rgba(255,255,255,.45);opacity:0;transform:scale(.35) rotate(-16deg)}
+.lg-mark svg{width:34px;height:34px}
+.lg-mark.in{animation:markIn .9s cubic-bezier(.34,1.56,.64,1) forwards,markGlow 3.4s ease-in-out 1.1s infinite}
+@keyframes markIn{to{opacity:1;transform:none}}
+@keyframes markGlow{50%{box-shadow:0 16px 54px rgba(139,92,246,.6),inset 0 1px 0 rgba(255,255,255,.45)}}
+.fl{box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.flip.done .fl:not(.sp){animation:flshine 1.1s cubic-bezier(.3,.7,.2,1) both;animation-delay:calc(var(--i)*65ms)}
+@keyframes flshine{35%{color:#9bd0ff;text-shadow:0 0 18px rgba(96,165,250,.95);transform:translateY(-5px)}100%{transform:none}}
+.login-sub{transform:translateY(6px);transition:opacity .7s,transform .7s}
+.login-sub.show{transform:none}
+.login-form{transition:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(14,19,26,.78);border-color:rgba(255,255,255,.1)}
+.login-form.show{animation:formIn .9s cubic-bezier(.16,1,.3,1) both}
+@keyframes formIn{from{opacity:0;transform:translateY(26px) scale(.97);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.login-form.show>*{animation:fup .65s cubic-bezier(.16,1,.3,1) both}
+.login-form.show>*:nth-child(1){animation-delay:.18s}.login-form.show>*:nth-child(2){animation-delay:.24s}.login-form.show>*:nth-child(3){animation-delay:.30s}.login-form.show>*:nth-child(4){animation-delay:.36s}.login-form.show>*:nth-child(5){animation-delay:.40s}.login-form.show>*:nth-child(6){animation-delay:.46s}
+@keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.login-form input:focus{box-shadow:0 0 0 3px rgba(99,102,241,.28);border-color:#6366f1}
+.lg-btn{position:relative;overflow:hidden;background:linear-gradient(110deg,#3b82f6,#6366f1 55%,#8b5cf6);box-shadow:0 10px 26px rgba(79,70,229,.4);display:grid;place-items:center;transition:background .4s,box-shadow .4s,transform .1s}
+.lg-btn::after{content:'';position:absolute;top:0;bottom:0;width:55%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-20deg);animation:sheen 3.4s ease-in-out 1.6s infinite;pointer-events:none}
+@keyframes sheen{0%{left:-80%}40%,100%{left:150%}}
+.lg-btn>*{grid-area:1/1;transition:opacity .25s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.lg-spin,.lg-chk{opacity:0;transform:scale(.4)}
+.lg-spin{width:22px;height:22px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%}
+.lg-chk{width:24px;height:24px}
+.lg-btn.busy,.lg-btn.ok{opacity:1;pointer-events:none}
+.lg-btn.busy .lg-bt{opacity:0;transform:scale(.8)}
+.lg-btn.busy .lg-spin{opacity:1;transform:none;animation:spin .8s linear infinite}
+.lg-btn.ok{background:linear-gradient(110deg,#16a34a,#22c55e);box-shadow:0 10px 26px rgba(34,197,94,.4)}
+.lg-btn.ok .lg-bt,.lg-btn.ok .lg-spin{opacity:0;transform:scale(.6)}
+.lg-btn.ok .lg-chk{opacity:1;transform:none}
+.lg-chk path{stroke-dasharray:24;stroke-dashoffset:24}
+.lg-btn.ok .lg-chk path{animation:draw .45s .1s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+/* Panel: entrada escalonada */
+body.enter .grid-3{animation:none}
+body.enter .sidebar{animation:slideR .8s cubic-bezier(.16,1,.3,1) both}
+body.enter .topbar{animation:slideD .7s cubic-bezier(.16,1,.3,1) both}
+body.enter .bottom-nav{animation:slideU .7s cubic-bezier(.16,1,.3,1) .1s both}
+body.enter .page-head{animation:rise .7s cubic-bezier(.16,1,.3,1) .12s both}
+body.enter #main-card{animation:dealIn 1s cubic-bezier(.16,1,.3,1) .15s both}
+body.enter .quick button{animation:pop .6s cubic-bezier(.34,1.5,.64,1) both}
+body.enter .quick button:nth-child(1){animation-delay:.45s}body.enter .quick button:nth-child(2){animation-delay:.52s}body.enter .quick button:nth-child(3){animation-delay:.59s}body.enter .quick button:nth-child(4){animation-delay:.66s}
+body.enter .grid-3>*{animation:pop .65s cubic-bezier(.34,1.4,.64,1) both}
+body.enter .grid-3>*:nth-child(1){animation-delay:.55s}body.enter .grid-3>*:nth-child(2){animation-delay:.63s}body.enter .grid-3>*:nth-child(3){animation-delay:.71s}body.enter .grid-3>*:nth-child(4){animation-delay:.79s}
+body.enter #pnl-save{animation-delay:.7s}body.enter #pnl-mov{animation-delay:.85s}
+body.enter .history-item{animation:rise .6s cubic-bezier(.16,1,.3,1) both}
+body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-item:nth-child(2){animation-delay:1.06s}body.enter .history-item:nth-child(3){animation-delay:1.12s}body.enter .history-item:nth-child(4){animation-delay:1.18s}body.enter .history-item:nth-child(5){animation-delay:1.24s}body.enter .history-item:nth-child(6){animation-delay:1.3s}
+@keyframes dealIn{from{opacity:0;transform:perspective(900px) translateY(46px) rotateX(20deg) scale(.93)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes slideR{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes slideD{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
+@keyframes slideU{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -323,7 +390,9 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 
     <!-- Login -->
     <div class="login" id="login">
+        <div class="lg-bg" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="login-box">
+            <div class="lg-mark" id="lg-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3.2"/><path d="M2.5 10h19M6.5 15h4"/></svg></div>
             <div class="flip" id="flip" role="img" aria-label="Hey Banco"></div>
             <p class="login-sub" id="lg-sub">Inicia sesión para continuar</p>
             <form class="login-form" id="lg-form" autocomplete="on">
@@ -332,7 +401,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
                 <label for="lg-pass">Contraseña</label>
                 <div class="pw"><input type="password" id="lg-pass" name="password" autocomplete="current-password" placeholder="Tu contraseña"><button type="button" class="pw-btn" onclick="verPass(this)">Mostrar</button></div>
                 <div class="login-err" id="lg-err" role="alert"></div>
-                <button type="submit" class="btn">Entrar</button>
+                <button type="submit" class="btn lg-btn" id="lg-btn"><span class="lg-bt">Entrar</span><span class="lg-spin" aria-hidden="true"></span><svg class="lg-chk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
             </form>
         </div>
     </div>
@@ -694,41 +763,56 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
             const texto = 'HEY BANCO', letras = [...texto].filter(c => c !== ' ');
             const flip = $('flip');
-            flip.innerHTML = [...texto].map(c => c === ' ' ? '<span class="fl sp"></span>' : `<span class="fl" aria-hidden="true">${reduce ? c : ''}</span>`).join('');
+            let k = 0;
+            flip.innerHTML = [...texto].map(c => c === ' ' ? '<span class="fl sp"></span>' : `<span class="fl" style="--i:${k++}" aria-hidden="true">${reduce ? c : ''}</span>`).join('');
             const tiles = [...flip.querySelectorAll('.fl:not(.sp)')];
             const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             const flap = (el, ch) => { el.textContent = ch; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); };
 
             function revelar() {
+                if (!reduce) flip.classList.add('done');
                 $('lg-sub').classList.add('show');
                 setTimeout(() => {
                     $('lg-form').classList.add('show');
-                    if (matchMedia('(hover: hover)').matches) $('lg-user').focus({ preventScroll: true });
-                }, 250);
+                    if (matchMedia('(hover: hover)').matches) setTimeout(() => $('lg-user').focus({ preventScroll: true }), 700);
+                }, reduce ? 0 : 350);
             }
-            if (reduce) revelar();
-            else tiles.forEach((el, i) => {
+            if (reduce) { $('lg-mark').style.opacity = 1; $('lg-mark').style.transform = 'none'; revelar(); }
+            else {
+                setTimeout(() => $('lg-mark').classList.add('in'), 120);
+                tiles.forEach((el, i) => {
+                    setTimeout(() => {
+                        let n = 0; const total = 5 + (i % 3);
+                        const t = setInterval(() => {
+                            n++; flap(el, n >= total ? letras[i] : abc[Math.floor(Math.random() * abc.length)]);
+                            if (n >= total) { clearInterval(t); if (i === tiles.length - 1) revelar(); }
+                        }, 90);
+                    }, 520 + i * 95);
+                });
+            }
+
+            function entrar() {
+                const btn = $('lg-btn');
+                btn.classList.remove('busy'); btn.classList.add('ok');
                 setTimeout(() => {
-                    let n = 0; const total = 5 + (i % 3);
-                    const t = setInterval(() => {
-                        n++; flap(el, n >= total ? letras[i] : abc[Math.floor(Math.random() * abc.length)]);
-                        if (n >= total) { clearInterval(t); if (i === tiles.length - 1) revelar(); }
-                    }, 110);
-                }, 300 + i * 110);
-            });
+                    document.body.classList.remove('locked');
+                    document.body.classList.add('enter');
+                    login.classList.add('out');
+                    if (!reduce) setTimeout(() => window.hbCountUp && window.hbCountUp(), 450);
+                    setTimeout(() => { login.remove(); document.body.classList.remove('enter'); }, 2900);
+                }, reduce ? 0 : 520);
+            }
 
             let fallos = 0, bloqueo = 0;
             $('lg-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const err = $('lg-err'), form = $('lg-form'), ahora = Date.now();
+                const err = $('lg-err'), form = $('lg-form'), btn = $('lg-btn'), ahora = Date.now();
                 if (ahora < bloqueo) { err.textContent = `Demasiados intentos. Espera ${Math.ceil((bloqueo - ahora) / 1000)} s.`; return; }
                 if ($('lg-user').value.trim() === USER && $('lg-pass').value === PASS) {
                     try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
                     err.textContent = '';
-                    document.body.classList.remove('locked');
-                    document.body.classList.add('enter');
-                    login.classList.add('out');
-                    setTimeout(() => { login.remove(); document.body.classList.remove('enter'); }, 1400);
+                    btn.classList.add('busy');
+                    setTimeout(entrar, reduce ? 0 : 750);
                 } else {
                     fallos++;
                     if (fallos >= 5) { bloqueo = ahora + 30000; fallos = 0; err.textContent = 'Demasiados intentos. Espera 30 s.'; }
@@ -892,6 +976,18 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
                     el.textContent = isPrivate ? '***' : el.getAttribute('data-val');
                 }
             });
+        }
+
+        window.hbCountUp = function() {
+            const el = document.getElementById('ui-balance'), fin = saldoActual, dur = 1400, t0 = performance.now();
+            const fmt = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if(!el || isPrivate) return;
+            (function f(t) {
+                const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+                if(isPrivate) return;
+                el.textContent = fmt.format(fin * e);
+                if(k < 1) requestAnimationFrame(f); else actualizarSaldos();
+            })(t0);
         }
 
         window.toggleNotifications = function() {
@@ -1409,12 +1505,23 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
                     }
                     await setDoc(cuentaRef, { tarjVer: TARJ_VER }, { merge: true });
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error(e); avisoTarjetas(e); }
         }
+        let avisoHecho = false;
+        function avisoTarjetas(e) {
+            if(avisoHecho) return; avisoHecho = true;
+            const perm = e && (e.code === 'permission-denied' || /permission/i.test(e.message || ''));
+            window.toast(perm ? 'Firebase bloqueó la colección "tarjetas". Agrega la regla en Firestore → Reglas.' : 'No se pudo leer "tarjetas" en Firebase. Se muestran en modo local.', 'error');
+        }
+        const tarjetasLocales = () => TARJ_BASE.map((b, i) => ({ ...b, id: 'local' + i, local: true }));
         function escucharTarjetas() {
             onSnapshot(query(tarjRef, orderBy('creado')), (snap) => {
                 tarjetas = snap.docs.map(d => ({ ...(TARJ_BASE.find(b => b.n === d.data().n) || {}), id: d.id, ...d.data() }));
+                if(!tarjetas.length) { tarjetas = tarjetasLocales(); avisoTarjetas(); }
                 renderCredito();
+            }, (err) => {
+                console.error(err); avisoTarjetas(err);
+                tarjetas = tarjetasLocales(); renderCredito();
             });
         }
         const hoy0 = () => { const h = new Date(); return new Date(h.getFullYear(), h.getMonth(), h.getDate()); };
@@ -1552,6 +1659,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         window.cerrarTarjeta = () => document.getElementById('modal-tarj').classList.remove('active');
         window.confirmarPagoTarjeta = async function() {
             const t = tjActual(); if(!t) return;
+            if(t.local) return window.toast('Las tarjetas están en modo local: publica la regla de Firestore para poder pagarlas.', 'error');
             const monto = r2(parseFloat(document.getElementById('tj-monto').value));
             if(isNaN(monto) || monto <= 0) return window.toast('Ingresa un monto mayor a 0.', 'error');
             if(monto > t.usado + 0.001) return window.toast('El pago no puede ser mayor al saldo de la tarjeta.', 'error');
