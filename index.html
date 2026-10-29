@@ -195,19 +195,60 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 .gd-actions .ic{flex:none;width:42px}
 .gd-actions .del{color:var(--danger)}
 .fd-info{display:flex;justify-content:space-between;gap:1rem;margin:1rem 0 .25rem;font-size:.85rem;color:var(--text-muted)}
+body.locked{overflow:hidden}
+body.locked .app,body.locked .bottom-nav,body.locked .chat-widget{visibility:hidden}
+.login{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;padding:1.5rem;background:radial-gradient(120% 80% at 50% 0%,#12275f 0%,#06080c 62%);overflow-y:auto;transition:opacity .5s ease,transform .6s ease}
+.login.out{opacity:0;transform:scale(1.05);pointer-events:none}
+.login-box{width:100%;max-width:380px;text-align:center}
+.flip{display:flex;justify-content:center;gap:6px;margin-bottom:.9rem;perspective:700px}
+.fl{width:2rem;height:2.9rem;display:grid;place-items:center;background:linear-gradient(180deg,#1b2535 0,#1b2535 49%,#0b1019 50%,#152033 100%);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:1.6rem;font-weight:800;color:#fff;position:relative;overflow:hidden;transform-origin:50% 50%}
+.fl::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.65)}
+.fl.sp{width:.7rem;background:none;border:0}.fl.sp::after{display:none}
+.fl.tick{animation:flap .16s ease-out}
+@keyframes flap{from{transform:rotateX(-90deg)}to{transform:none}}
+.login-sub{color:#8b95a5;margin:0 0 1.75rem;opacity:0;transition:opacity .7s}
+.login-sub.show{opacity:1}
+.login-form{text-align:left;background:#0e131a;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:1.25rem;box-shadow:0 20px 50px rgba(0,0,0,.5);opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1)}
+.login-form.show{opacity:1;transform:none}
+.login-form label{display:block;margin-top:1rem;font-size:.85rem;font-weight:500;color:#8b95a5}
+.login-form label:first-of-type{margin-top:0}
+.pw{position:relative}.pw input{padding-right:5.2rem}
+.pw-btn{position:absolute;right:.4rem;top:calc(50% + .25rem);transform:translateY(-50%);background:none;border:0;color:#8b95a5;font-weight:600;min-height:40px;padding:0 .7rem;cursor:pointer}
+.login-err{min-height:1.3rem;color:#f87171;font-size:.85rem;margin:.9rem 0 .5rem}
+.login-form.bad{animation:shake .4s}
+body.enter #main-card,body.enter .quick,body.enter .grid-3,body.enter #pnl-save,body.enter #pnl-mov{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
+body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}body.enter #pnl-save{animation-delay:.24s}body.enter #pnl-mov{animation-delay:.32s}
+@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.98)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
-<body>
+<body class="locked">
+
+    <!-- Login -->
+    <div class="login" id="login">
+        <div class="login-box">
+            <div class="flip" id="flip" role="img" aria-label="Hey Banco"></div>
+            <p class="login-sub" id="lg-sub">Inicia sesión para continuar</p>
+            <form class="login-form" id="lg-form" autocomplete="on">
+                <label for="lg-user">Usuario</label>
+                <input type="text" id="lg-user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Tu usuario">
+                <label for="lg-pass">Contraseña</label>
+                <div class="pw"><input type="password" id="lg-pass" name="password" autocomplete="current-password" placeholder="Tu contraseña"><button type="button" class="pw-btn" onclick="verPass(this)">Mostrar</button></div>
+                <div class="login-err" id="lg-err" role="alert"></div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
 
     <div class="app">
     <aside class="sidebar">
-        <div class="brand"><img src="favicon.png" alt="" onerror="this.style.display='none'">Hey Banco</div>
+        <div class="brand">Hey Banco</div>
         <nav id="nav-side" aria-label="Principal"></nav>
     </aside>
     <div class="main-wrapper">
         <header class="topbar">
-            <div class="brand brand-m"><img src="favicon.png" alt="" onerror="this.style.display='none'">Hey Banco</div>
+            <div class="brand brand-m">Hey Banco</div>
             <div class="tb-actions">
                 <button class="icon-btn" onclick="abrirConfig()" title="Configuración" aria-label="Configuración"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
                 <button class="icon-btn" onclick="togglePrivacidad()" title="Ocultar saldos" aria-label="Ocultar saldos">👁️</button>
@@ -464,6 +505,8 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                 <button class="btn-outline" style="padding:.5rem 1rem" onclick="cerrarConfig();abrirMov()">Registrar</button></div>
             <div class="cfg-row"><div><strong>Perfil</strong><div class="text-sm">Nombre, correo y teléfono</div></div>
                 <button class="btn-outline" style="padding:.5rem 1rem" onclick="cerrarConfig();nav('ajustes')">Editar</button></div>
+            <div class="cfg-row"><div><strong>Sesión</strong><div class="text-sm">Sal de tu cuenta en este dispositivo</div></div>
+                <button class="btn-outline" style="padding:.5rem 1rem;color:var(--danger)" onclick="cerrarSesion()">Cerrar sesión</button></div>
         </div>
     </div>
 
@@ -514,6 +557,69 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 
     <!-- Contenedor Toasts -->
     <div id="toast-container"></div>
+
+    <script>
+        // Acceso a la interfaz. Es un control de pantalla: las credenciales viajan en este archivo.
+        const KEY = 'hb_auth';
+        function cerrarSesion() { try { sessionStorage.removeItem(KEY); } catch (e) {} location.reload(); }
+        function verPass(btn) {
+            const i = document.getElementById('lg-pass'), oculto = i.type === 'password';
+            i.type = oculto ? 'text' : 'password'; btn.textContent = oculto ? 'Ocultar' : 'Mostrar';
+        }
+        (function () {
+            const USER = 'pbuycun', PASS = 'pointbuysecured2204';
+            const $ = id => document.getElementById(id), login = $('login');
+            let ok = false; try { ok = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
+            if (ok) { document.body.classList.remove('locked'); login.remove(); return; }
+
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const texto = 'HEY BANCO', letras = [...texto].filter(c => c !== ' ');
+            const flip = $('flip');
+            flip.innerHTML = [...texto].map(c => c === ' ' ? '<span class="fl sp"></span>' : `<span class="fl" aria-hidden="true">${reduce ? c : ''}</span>`).join('');
+            const tiles = [...flip.querySelectorAll('.fl:not(.sp)')];
+            const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const flap = (el, ch) => { el.textContent = ch; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); };
+
+            function revelar() {
+                $('lg-sub').classList.add('show');
+                setTimeout(() => {
+                    $('lg-form').classList.add('show');
+                    if (matchMedia('(hover: hover)').matches) $('lg-user').focus({ preventScroll: true });
+                }, 250);
+            }
+            if (reduce) revelar();
+            else tiles.forEach((el, i) => {
+                setTimeout(() => {
+                    let n = 0; const total = 5 + (i % 3);
+                    const t = setInterval(() => {
+                        n++; flap(el, n >= total ? letras[i] : abc[Math.floor(Math.random() * abc.length)]);
+                        if (n >= total) { clearInterval(t); if (i === tiles.length - 1) revelar(); }
+                    }, 110);
+                }, 300 + i * 110);
+            });
+
+            let fallos = 0, bloqueo = 0;
+            $('lg-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const err = $('lg-err'), form = $('lg-form'), ahora = Date.now();
+                if (ahora < bloqueo) { err.textContent = `Demasiados intentos. Espera ${Math.ceil((bloqueo - ahora) / 1000)} s.`; return; }
+                if ($('lg-user').value.trim() === USER && $('lg-pass').value === PASS) {
+                    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+                    err.textContent = '';
+                    document.body.classList.remove('locked');
+                    document.body.classList.add('enter');
+                    login.classList.add('out');
+                    setTimeout(() => { login.remove(); document.body.classList.remove('enter'); }, 1400);
+                } else {
+                    fallos++;
+                    if (fallos >= 5) { bloqueo = ahora + 30000; fallos = 0; err.textContent = 'Demasiados intentos. Espera 30 s.'; }
+                    else err.textContent = 'Usuario o contraseña incorrectos.';
+                    $('lg-pass').value = '';
+                    form.classList.remove('bad'); void form.offsetWidth; form.classList.add('bad');
+                }
+            });
+        })();
+    </script>
 
     <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
