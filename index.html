@@ -223,6 +223,17 @@ body.locked .app,body.locked .bottom-nav,body.locked .chat-widget{visibility:hid
 body.enter #main-card,body.enter .quick,body.enter .grid-3,body.enter #pnl-save,body.enter #pnl-mov{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
 body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}body.enter #pnl-save{animation-delay:.24s}body.enter #pnl-mov{animation-delay:.32s}
 @keyframes rise{from{opacity:0;transform:translateY(28px) scale(.98)}to{opacity:1;transform:none}}
+.cc-grid{display:grid;gap:.85rem}
+.cc{border-radius:20px;padding:1.1rem;color:#fff;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14)}
+.cc::after{content:'';position:absolute;right:-50px;top:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07)}
+.cc>*{position:relative;z-index:1}
+.cc-top{display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.cc-top small{font-weight:500;opacity:.85;letter-spacing:1px}
+.cc-av{font-size:1.7rem;font-weight:800;letter-spacing:-.5px;margin:.9rem 0 .1rem}
+.cc-lbl{font-size:.78rem;opacity:.8}
+.cc .progress-bar-bg{background:rgba(255,255,255,.22)}
+.cc-meta{display:flex;justify-content:space-between;gap:.25rem .75rem;font-size:.78rem;opacity:.9;margin-top:.7rem;flex-wrap:wrap}
+@media(min-width:700px){.cc-grid{grid-template-columns:repeat(3,1fr)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -404,6 +415,10 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 
              <!-- SECCIÓN: TARJETAS & CODI -->
              <div id="sec-tarjetas" class="section-panel">
+                <div class="panel" style="margin-bottom:1rem">
+                    <h3 class="panel-title">Tarjetas de crédito</h3>
+                    <div class="cc-grid" id="ui-credito"></div>
+                </div>
                 <div class="grid-layout">
                     <div class="panel">
                         <h3 class="panel-title">Control de Seguridad</h3>
@@ -673,7 +688,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             guardarPref({ privado: isPrivate });
         }
         function aplicarPriv() {
-            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements); renderGuardaditos();
+            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements); renderGuardaditos(); renderCredito();
             const c = document.getElementById('cfg-priv'); if(c) c.checked = isPrivate;
         }
         function guardarPref(o) { setDoc(cuentaRef, o, { merge: true }).catch(console.error); }
@@ -1263,8 +1278,34 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             }
         }
 
+        // --- Tarjetas de crédito (datos de demostración; solo se muestran los últimos 4 dígitos) ---
+        const TARJ = [
+            { n: 'Hey Platinum', l4: '7741', lim: 240000, usado: 62480.35, corte: 12, bg: 'linear-gradient(135deg,#1d4ed8,#0b1b4a)' },
+            { n: 'Hey Oro', l4: '3305', lim: 150000, usado: 18725.90, corte: 20, bg: 'linear-gradient(135deg,#b8862b,#3a2a0c)' },
+            { n: 'Pointbuy Negocios', l4: '9168', lim: 100000, usado: 41310.00, corte: 5, bg: 'linear-gradient(135deg,#0f766e,#052e2b)' }
+        ];
+        function proxFecha(dia, suma = 0) {
+            const h = new Date(); let d = new Date(h.getFullYear(), h.getMonth(), dia);
+            if(d < new Date(h.getFullYear(), h.getMonth(), h.getDate())) d = new Date(h.getFullYear(), h.getMonth() + 1, dia);
+            d.setDate(d.getDate() + suma);
+            return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+        }
+        function renderCredito() {
+            const el = document.getElementById('ui-credito'); if(!el) return;
+            el.innerHTML = TARJ.map(t => {
+                const pct = Math.min(100, t.usado / t.lim * 100);
+                return `<div class="cc" style="background:${t.bg}">
+                    <div class="cc-top"><span>${t.n}</span><small>•••• ${t.l4}</small></div>
+                    <div class="cc-av">${mxn(t.lim - t.usado)}</div>
+                    <div class="cc-lbl">Disponible de ${mxn(t.lim)}</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="background:#fff;width:${pct}%"></div></div>
+                    <div class="cc-meta"><span>Usado ${mxn(t.usado)}</span><span>Corte ${proxFecha(t.corte)}</span><span>Pago ${proxFecha(t.corte, 20)}</span></div>
+                </div>`;
+            }).join('');
+        }
+
         // Inicialización
-        pintarNav(); pintarTeclado();
+        pintarNav(); pintarTeclado(); renderCredito();
         actualizarSaldos();
         iniciarCuenta().then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
 
