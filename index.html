@@ -1494,11 +1494,12 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             try {
                 const snap = await getDoc(cuentaRef);
                 const c = snap.exists() ? snap.data() : {};
-                if(!c.tarjSembradas) {
-                    for(let i = 0; i < TARJ_BASE.length; i++) await addDoc(tarjRef, { ...TARJ_BASE[i], creado: Date.now() + i });
+                const docs = await getDocs(tarjRef);
+                if(docs.empty) {
+                    // Colección vacía (primera vez o borrada): se suben de nuevo, con id fijo para no duplicar
+                    for(let i = 0; i < TARJ_BASE.length; i++) await setDoc(doc(tarjRef, 'tarjeta-' + (i + 1)), { ...TARJ_BASE[i], creado: Date.now() + i });
                     await setDoc(cuentaRef, { tarjSembradas: true, tarjVer: TARJ_VER }, { merge: true });
                 } else if((c.tarjVer || 1) < TARJ_VER) {
-                    const docs = await getDocs(tarjRef);
                     for(const d of docs.docs) {
                         const base = TARJ_BASE.find(b => b.n === d.data().n);
                         if(base) { const { usado, corte, ...fijos } = base; await setDoc(d.ref, fijos, { merge: true }); }
@@ -1517,7 +1518,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
         function escucharTarjetas() {
             onSnapshot(query(tarjRef, orderBy('creado')), (snap) => {
                 tarjetas = snap.docs.map(d => ({ ...(TARJ_BASE.find(b => b.n === d.data().n) || {}), id: d.id, ...d.data() }));
-                if(!tarjetas.length) { tarjetas = tarjetasLocales(); avisoTarjetas(); }
+                if(!tarjetas.length) tarjetas = tarjetasLocales();
                 renderCredito();
             }, (err) => {
                 console.error(err); avisoTarjetas(err);
