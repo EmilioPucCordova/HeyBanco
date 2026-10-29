@@ -383,6 +383,60 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
 @keyframes slideR{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
 @keyframes slideD{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
 @keyframes slideU{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+/* ===== Transferencias y perfil ===== */
+.tf-grid{display:grid;gap:1rem;grid-template-columns:1fr}
+.tf-col{display:flex;flex-direction:column;gap:1rem;min-width:0}
+@media(min-width:1024px){.tf-grid{grid-template-columns:minmax(0,1fr) 370px;align-items:start}.tf-side{position:sticky;top:0}}
+.tf-src{display:flex;align-items:center;gap:.9rem}
+.tf-src-ic{width:48px;height:48px;border-radius:14px;background:var(--card-grad);display:grid;place-items:center;color:#fff;flex:none}
+.tf-src-ic svg{width:24px;height:24px}
+.tf-src-tx{flex:1;min-width:0}.tf-src-bal{text-align:right}.tf-src-bal strong{font-size:1.15rem}
+.tf-step{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+.tf-step span{width:26px;height:26px;border-radius:50%;background:rgba(59,130,246,.16);color:var(--accent-hover);display:grid;place-items:center;font-weight:700;font-size:.8rem;flex:none}
+.tf-step h3{margin:0}
+.tf-ct{position:relative;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:.85rem .7rem .7rem;min-width:108px;max-width:124px;text-align:center;cursor:pointer;scroll-snap-align:start;flex:none}
+.tf-ct:hover,.tf-ct:active{border-color:var(--accent)}
+.tf-ct strong{display:block;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tf-ct small{display:block;font-size:.68rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tf-av{width:42px;height:42px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:.95rem}
+.tf-x{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:0;background:transparent;color:var(--text-muted);cursor:pointer;font-size:1rem;line-height:1;padding:0}
+.tf-x:hover{background:rgba(239,68,68,.15);color:var(--danger)}
+.tf-tipos{margin:1rem 0 .25rem}
+.tf-st{min-height:1.4rem;font-size:.82rem;margin-top:.55rem;display:flex;align-items:center;gap:7px;color:var(--text-muted)}
+.tf-st::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.tf-st.ok{color:var(--success)}.tf-st.warn{color:var(--warning)}.tf-st.bad{color:var(--danger)}
+.tf-chk{display:flex;align-items:center;gap:.6rem;margin-top:1rem;font-size:.88rem;color:var(--text-muted);cursor:pointer}
+.tf-chk input{width:18px;min-height:18px;height:18px;margin:0;accent-color:var(--accent)}
+.tf-amt{display:flex;align-items:center;gap:.4rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:.8rem 1.1rem;margin-top:.5rem;transition:border-color .2s,box-shadow .2s}
+.tf-amt:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.tf-amt>span{font-size:1.6rem;font-weight:700;color:var(--text-muted)}
+.tf-amt small{color:var(--text-muted);font-weight:700;letter-spacing:.08em}
+.tf-amt input{border:0;background:none;box-shadow:none!important;font-size:2.1rem;font-weight:800;min-height:0;margin:0;padding:0;letter-spacing:-1px;-moz-appearance:textfield}
+.tf-amt input::-webkit-outer-spin-button,.tf-amt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.tf-chips{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.7rem}
+.tf-chips button{background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-main);border-radius:999px;padding:.4rem .9rem;font-size:.82rem;font-weight:600;cursor:pointer;min-height:36px}
+.tf-chips button:hover{border-color:var(--accent)}
+.tf-2c{display:grid;grid-template-columns:1fr;gap:0 1rem}
+@media(min-width:700px){.tf-2c{grid-template-columns:1.4fr 1fr}}
+.tf-lim{margin-top:.9rem;font-size:.8rem;color:var(--text-muted)}
+.tf-sum .panel-title{display:flex;justify-content:space-between;align-items:center}
+.tf-row{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px dashed var(--border);font-size:.88rem}
+.tf-row span{color:var(--text-muted);flex:none}.tf-row strong{text-align:right;overflow-wrap:anywhere}
+.tf-tot{display:flex;justify-content:space-between;align-items:baseline;padding:.9rem 0 .4rem}
+.tf-tot strong{font-size:1.5rem;letter-spacing:-.5px}
+.tf-hint{min-height:1.3rem;font-size:.8rem;color:var(--warning);margin:.4rem 0 .6rem;text-align:center}
+.tf-sec{font-size:.75rem;color:var(--text-muted);text-align:center;margin-top:.8rem}
+.tf-ult{display:flex;align-items:center;gap:.7rem;padding:.7rem 0;border-bottom:1px solid var(--border)}
+.tf-ult:last-child{border-bottom:0}
+.tf-ult>div:nth-child(2){flex:1;min-width:0}
+.tf-ult strong,.tf-ult small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tf-ult small{color:var(--text-muted);font-size:.75rem}
+.tf-ult .tf-av{margin:0;width:38px;height:38px;font-size:.8rem;flex:none}
+.tf-ult button{min-height:34px;padding:0 .8rem;font-size:.78rem;font-weight:600;border-radius:10px}
+.pf-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.pf-av{width:62px;height:62px;font-size:1.5rem;flex:none;cursor:default}
+.pf-head>div:nth-child(2){flex:1;min-width:0}
+.pf-head strong{display:block;font-size:1.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -432,7 +486,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             <div class="page-head">
                 <h1 id="top-title">Resumen General</h1>
                 <select id="account-selector" aria-label="Cuenta" onchange="cambiarCuenta(this.value)">
-                    <option value="personal">Cuenta Personal (Emi)</option>
+                    <option value="personal" id="opt-personal">Cuenta Personal (Emi)</option>
                     <option value="business">Pointbuy Negocios</option>
                 </select>
             </div>
@@ -458,7 +512,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
                             <div class="card-top">
                                 <div class="chip"></div>
                                 <div class="copy-row">
-                                    <button onclick="copiarDato('012345678909876543', 'CLABE')">Copiar CLABE</button>
+                                    <button onclick="copiarDato('012345678909876546', 'CLABE')">Copiar CLABE</button>
                                     <button onclick="copiarDato('4092111122223333', 'Tarjeta')">Tarjeta</button>
                                 </div>
                             </div>
@@ -504,39 +558,75 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
 
             <!-- SECCIÓN: TRANSFERENCIAS -->
             <div id="sec-transferencias" class="section-panel">
-                <div class="grid-layout">
-                    <div class="panel">
-                        <h3 class="panel-title">Realizar Transferencia SPEI</h3>
-                        
-                        <!-- Contactos Rápidos -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <div class="text-sm" style="margin-bottom: 10px;">Contactos Rápidos</div>
-                            <div class="contact-scroll">
-                                <div class="contact-card" onclick="llenarTransferencia('012345678901234567', 'Fondo Familiar - Remodelación')">
-                                    <div class="contact-avatar">🏠</div>
-                                    <div class="text-sm">Familiar<br>(Ahorro)</div>
-                                </div>
-                                <div class="contact-card" onclick="llenarTransferencia('987654321098765432', 'Host Kukulcán Roleplay')">
-                                    <div class="contact-avatar">💻</div>
-                                    <div class="text-sm">Host<br>Kukulcán</div>
-                                </div>
-                                <div class="contact-card" onclick="llenarTransferencia('112233445566778899', 'Proveedor Mercado Pago')">
-                                    <div class="contact-avatar">💳</div>
-                                    <div class="text-sm">Proveedor<br>Point Smart</div>
-                                </div>
-                            </div>
+                <div class="tf-grid">
+                    <div class="tf-col">
+                        <div class="panel tf-src">
+                            <div class="tf-src-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/></svg></div>
+                            <div class="tf-src-tx"><div class="text-sm">Cuenta de origen</div><strong>Cuenta Personal · •••• 4092</strong></div>
+                            <div class="tf-src-bal"><div class="text-sm">Disponible</div><strong id="tf-saldo">$0.00</strong></div>
                         </div>
 
-                        <input type="text" id="t-clabe" placeholder="CLABE, Tarjeta o Celular (18 dígitos)" maxlength="18" inputmode="numeric" autocomplete="off">
-                        <input type="text" id="t-concepto" placeholder="Concepto de pago">
-                        <input type="number" id="t-monto" placeholder="Monto (MXN) $0.00" inputmode="decimal">
-                        
-                        <div style="margin-top: 1rem;">
-                            <label class="text-sm">Programar Transferencia (Opcional)</label>
-                            <input type="datetime-local" id="t-fecha" class="input-like">
+                        <div class="panel">
+                            <div class="tf-step"><span>1</span><h3 class="panel-title">¿A quién le envías?</h3></div>
+                            <div class="text-sm" style="margin-bottom:.6rem">Contactos guardados</div>
+                            <div class="contact-scroll" id="tf-contacts"></div>
+
+                            <div class="seg tf-tipos" id="tf-tipo" role="group" aria-label="Tipo de destino">
+                                <button data-t="clabe" class="on" onclick="setTipoDestino('clabe')">CLABE</button>
+                                <button data-t="tarjeta" onclick="setTipoDestino('tarjeta')">Tarjeta</button>
+                                <button data-t="celular" onclick="setTipoDestino('celular')">Celular</button>
+                            </div>
+                            <label class="text-sm" id="tf-lbl" for="t-clabe">CLABE interbancaria (18 dígitos)</label>
+                            <input type="text" id="t-clabe" maxlength="18" inputmode="numeric" autocomplete="off" placeholder="000000000000000000" oninput="this.value=this.value.replace(/\D/g,'');tfActualizar()">
+                            <div class="tf-st" id="tf-st" role="status"></div>
+                            <div id="tf-banco-wrap" style="display:none">
+                                <label class="text-sm" for="t-banco">Banco destino</label>
+                                <select id="t-banco" onchange="tfActualizar()"></select>
+                            </div>
+                            <label class="text-sm" for="t-benef">Nombre del beneficiario</label>
+                            <input type="text" id="t-benef" maxlength="60" autocomplete="off" placeholder="Como aparece en su cuenta" oninput="tfActualizar()">
+                            <label class="tf-chk"><input type="checkbox" id="t-guardar"> Guardar como contacto</label>
                         </div>
-                        
-                        <button class="btn" id="btn-transferir" style="margin-top: 1.5rem;" onclick="ejecutarTransferenciaFirestore()">Transferir Fondos</button>
+
+                        <div class="panel">
+                            <div class="tf-step"><span>2</span><h3 class="panel-title">Monto y detalles</h3></div>
+                            <label class="text-sm" for="t-monto" style="margin-top:0">Monto a enviar</label>
+                            <div class="tf-amt"><span>$</span><input type="number" id="t-monto" inputmode="decimal" step="0.01" min="0" placeholder="0.00" oninput="tfActualizar()"><small>MXN</small></div>
+                            <div class="tf-chips" id="tf-chips"></div>
+                            <div class="tf-lim" id="tf-lim"></div>
+                            <div class="vmeter" style="margin-top:.5rem"><i id="tf-lim-bar" style="background:var(--accent);width:0"></i></div>
+
+                            <div class="tf-2c">
+                                <div><label class="text-sm" for="t-concepto">Concepto de pago</label>
+                                <input type="text" id="t-concepto" maxlength="40" autocomplete="off" placeholder="Ej. Renta de noviembre" oninput="tfActualizar()"></div>
+                                <div><label class="text-sm" for="t-ref">Referencia numérica</label>
+                                <input type="text" id="t-ref" maxlength="7" inputmode="numeric" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'');tfActualizar()"></div>
+                            </div>
+
+                            <label class="text-sm">¿Cuándo se envía?</label>
+                            <div class="seg" id="tf-cuando" style="margin-top:.5rem"><button data-p="0" class="on" onclick="setProg(false)">Ahora</button><button data-p="1" onclick="setProg(true)">Programar</button></div>
+                            <div id="tf-fecha-wrap" style="display:none"><input type="datetime-local" id="t-fecha" class="input-like" oninput="tfActualizar()"></div>
+                        </div>
+                    </div>
+
+                    <div class="tf-col tf-side">
+                        <div class="panel tf-sum">
+                            <h3 class="panel-title">Resumen <span class="st st-ok">SPEI 24/7</span></h3>
+                            <div class="tf-row"><span>Destino</span><strong id="sm-destino">—</strong></div>
+                            <div class="tf-row"><span>Banco</span><strong id="sm-banco">—</strong></div>
+                            <div class="tf-row"><span>Beneficiario</span><strong id="sm-benef">—</strong></div>
+                            <div class="tf-row"><span>Concepto</span><strong id="sm-conc">—</strong></div>
+                            <div class="tf-row"><span>Aplicación</span><strong id="sm-fecha">Inmediata</strong></div>
+                            <div class="tf-row"><span>Comisión</span><strong style="color:var(--success)">$0.00</strong></div>
+                            <div class="tf-tot"><span class="text-sm">Total a debitar</span><strong id="sm-total">$0.00</strong></div>
+                            <div class="tf-hint" id="tf-hint"></div>
+                            <button class="btn" id="btn-transferir" onclick="ejecutarTransferenciaFirestore()">Revisar y transferir</button>
+                            <div class="tf-sec">🔒 Se autoriza con tu NIP de 4 dígitos</div>
+                        </div>
+                        <div class="panel">
+                            <h3 class="panel-title">Últimas transferencias</h3>
+                            <div id="tf-ultimas"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -604,7 +694,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
                                 <path d="M10,10 h30 v30 h-30 z M15,15 h20 v20 h-20 z M60,10 h30 v30 h-30 z M65,15 h20 v20 h-20 z M10,60 h30 v30 h-30 z M15,65 h20 v20 h-20 z M50,50 h10 v10 h-10 z M70,50 h20 v20 h-20 z M50,70 h20 v20 h-20 z M80,80 h10 v10 h-10 z" fill="black"/>
                             </svg>
                         </div>
-                        <div style="margin-top: 1rem; font-weight: bold;">Emi - Cuenta Personal</div>
+                        <div style="margin-top: 1rem; font-weight: bold;" id="codi-nom">Emi - Cuenta Personal</div>
                     </div>
                 </div>
              </div>
@@ -613,14 +703,23 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
              <div id="sec-ajustes" class="section-panel">
                 <div class="grid-layout">
                     <div class="panel">
-                        <h3 class="panel-title">Datos del Perfil</h3>
-                        <label class="text-sm">Nombre Completo</label>
-                        <input type="text" value="Emi" id="perfil-nombre">
-                        <label class="text-sm">Correo Electrónico</label>
-                        <input type="email" value="contacto@pointbuy.app" id="perfil-correo">
-                        <label class="text-sm">Teléfono (Asociado a CoDi)</label>
-                        <input type="tel" value="998 123 4567">
-                        <button class="btn" style="margin-top: 1.5rem;" onclick="guardarPerfil()">Actualizar Datos</button>
+                        <div class="pf-head">
+                            <div class="avatar pf-av" id="pf-av">E</div>
+                            <div><strong id="pf-nom">Emi</strong><div class="text-sm" id="pf-mail"></div></div>
+                            <span class="st st-warn" id="pf-sync">Cargando…</span>
+                        </div>
+                        <h3 class="panel-title">Datos personales</h3>
+                        <label class="text-sm" for="perfil-nombre">Nombre completo</label>
+                        <input type="text" id="perfil-nombre" maxlength="60" autocomplete="name">
+                        <label class="text-sm" for="perfil-correo">Correo electrónico</label>
+                        <input type="email" id="perfil-correo" maxlength="80" autocomplete="email" inputmode="email">
+                        <label class="text-sm" for="perfil-tel">Teléfono (asociado a CoDi)</label>
+                        <input type="tel" id="perfil-tel" maxlength="14" autocomplete="tel" inputmode="tel">
+                        <label class="text-sm" for="perfil-nac">Fecha de nacimiento</label>
+                        <input type="date" id="perfil-nac" class="input-like">
+                        <label class="text-sm" for="perfil-dom">Domicilio</label>
+                        <input type="text" id="perfil-dom" maxlength="120" autocomplete="street-address" placeholder="Calle, número, colonia, ciudad">
+                        <button class="btn" id="btn-perfil" style="margin-top: 1.5rem;" onclick="guardarPerfil()">Guardar cambios</button>
                     </div>
                 </div>
              </div>
@@ -848,6 +947,10 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
         const tarjRef = collection(db, "tarjetas");
 
         // Variables Globales
+        const perfilRef = doc(db, "cuenta", "perfil");
+        const contRef = collection(db, "contactos");
+        const PERFIL_BASE = { nombre: 'Emi', correo: 'contacto@pointbuy.app', telefono: '998 123 4567', nacimiento: '', domicilio: '' };
+        let perfil = { ...PERFIL_BASE };
         const SALDO_INICIAL = 102347.24;
         const LIMITE_MENSUAL = 20000;
         let saldoActual = SALDO_INICIAL;
@@ -873,7 +976,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             guardarPref({ privado: isPrivate });
         }
         function aplicarPriv() {
-            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements); renderGuardaditos(); renderCredito();
+            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements); renderGuardaditos(); renderCredito(); tfActualizar();
             const c = document.getElementById('cfg-priv'); if(c) c.checked = isPrivate;
         }
         function guardarPref(o) { setDoc(cuentaRef, o, { merge: true }).catch(console.error); }
@@ -925,7 +1028,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
         window.pedirNip = function(datos) {
             nipPend = datos; nip = ''; nipIntentos = 0; pintarNip();
             document.getElementById('nip-monto').textContent = new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(datos.monto);
-            document.getElementById('nip-dest').textContent = `Destino: •••• ${datos.clabe.slice(-4)} · ${datos.conc}`;
+            document.getElementById('nip-dest').textContent = `${datos.benef ? datos.benef + ' · ' : ''}•••• ${datos.clabe.slice(-4)} · ${datos.conc}`;
             document.getElementById('modal-nip').classList.add('active');
         }
         window.cancelarNip = function() {
@@ -1013,12 +1116,6 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             }, 1000);
         }
 
-        window.llenarTransferencia = function(clabe, concepto) {
-            document.getElementById('t-clabe').value = clabe;
-            document.getElementById('t-concepto').value = concepto;
-            window.toast('Datos del contacto cargados.');
-        }
-
         window.setFilter = function(tipo, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -1039,7 +1136,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             pdf.setTextColor(100, 116, 139); pdf.setFontSize(10); pdf.text('Monto', 20, 56);
             pdf.setTextColor(15, 23, 42); pdf.setFont('helvetica', 'bold'); pdf.setFontSize(30); pdf.text(`${monto} MXN`, 20, 70);
             const prog = String(d.fecha).startsWith('Prog');
-            const filas = [['Concepto', d.concepto], ['Destino (CLABE)', d.clabe], ['Fecha', d.fecha], ['Referencia', d.referencia], ['Clave de rastreo', d.claveRastreo], ['Institución emisora', 'Hey Banco (SPEI)'], ['Estatus', prog ? 'Programada' : 'Aplicada']].filter(f => f[1]);
+            const filas = [['Beneficiario', d.benef], ['Banco destino', d.banco], [d.tipoLbl || 'Destino (CLABE)', d.clabe], ['Concepto', d.concepto], ['Fecha', d.fecha], ['Referencia', d.referencia], ['Clave de rastreo', d.claveRastreo], ['Institución emisora', 'Hey Banco (SPEI)'], ['Estatus', prog ? 'Programada' : 'Aplicada']].filter(f => f[1]);
             let y = 92;
             filas.forEach(([k, v]) => {
                 pdf.setFont('helvetica', 'normal'); pdf.setFontSize(10); pdf.setTextColor(100, 116, 139); pdf.text(k, 20, y);
@@ -1056,7 +1153,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             const m = allMovements.find(x => x.conc === concepto);
             if(!m) return window.toast('No se encontró el movimiento.', 'error');
             const t = String(m.timestamp || '');
-            window.generarPDF({ titulo: m.tipo === 'gasto' ? 'Comprobante de gasto' : 'Comprobante de ingreso', concepto: m.conc, monto: m.monto, fecha: m.fecha || '', referencia: t.slice(-6), claveRastreo: 'HEY' + t.slice(-9) });
+            window.generarPDF({ titulo: m.tipo === 'gasto' ? 'Comprobante de gasto' : 'Comprobante de ingreso', concepto: m.conc, monto: m.monto, fecha: m.fecha || '', referencia: m.refNum || t.slice(-6), claveRastreo: 'HEY' + t.slice(-9), benef: m.benef, banco: m.banco, clabe: m.destino, tipoLbl: m.destino ? TIPO_LBL[m.tipoDestino] : '' });
         }
 
         // --- Guardaditos (Firestore: colección "guardaditos") ---
@@ -1235,25 +1332,22 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             window.toast('CVV Dinámico generado por 5 minutos.');
         }
 
-        window.guardarPerfil = function() {
-            const nombre = document.getElementById('perfil-nombre').value;
-            if(nombre) document.querySelector('.avatar').textContent = nombre.charAt(0).toUpperCase();
-            renderCredito(); window.toast('Datos de perfil actualizados.');
-        }
-
         // Lógica de Ventana de Comprobante SPEI
-        window.mostrarComprobante = function(clabe, concepto, monto, fecha) {
+        window.mostrarComprobante = function(d) {
             const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-            const referencia = Math.floor(100000 + Math.random() * 900000);
+            const referencia = d.ref || Math.floor(100000 + Math.random() * 900000);
             const claveRastreo = 'HEY' + Math.floor(Math.random() * 1000000000);
-            ultimoComprobante = { titulo: 'Comprobante de transferencia SPEI', clabe, concepto, monto, fecha, referencia, claveRastreo };
+            const tipoLbl = TIPO_LBL[d.tipo] || 'Destino (CLABE)';
+            ultimoComprobante = { titulo: 'Comprobante de transferencia SPEI', clabe: d.clabe, concepto: d.conc, monto: d.monto, fecha: d.fecha, referencia, claveRastreo, benef: d.benef, banco: d.banco, tipoLbl };
             setTimeout(() => window.generarPDF(ultimoComprobante), 400);
 
             const contentHtml = `
-                <div class="receipt-row"><span>Monto:</span><strong>${formatter.format(monto)} MXN</strong></div>
-                <div class="receipt-row"><span>Destino (CLABE):</span><strong>${clabe}</strong></div>
-                <div class="receipt-row"><span>Concepto:</span><strong>${concepto}</strong></div>
-                <div class="receipt-row"><span>Fecha Emisión:</span><strong>${fecha}</strong></div>
+                <div class="receipt-row"><span>Monto:</span><strong>${formatter.format(d.monto)} MXN</strong></div>
+                <div class="receipt-row"><span>Beneficiario:</span><strong>${esc(d.benef || '')}</strong></div>
+                <div class="receipt-row"><span>Banco destino:</span><strong>${esc(d.banco || '')}</strong></div>
+                <div class="receipt-row"><span>${tipoLbl}:</span><strong>${esc(d.clabe)}</strong></div>
+                <div class="receipt-row"><span>Concepto:</span><strong>${esc(d.conc)}</strong></div>
+                <div class="receipt-row"><span>Fecha Emisión:</span><strong>${esc(d.fecha)}</strong></div>
                 <div class="receipt-row"><span>Referencia:</span><strong>${referencia}</strong></div>
                 <div class="receipt-row"><span>Clave de Rastreo:</span><strong style="font-family: monospace; font-size:0.8rem;">${claveRastreo}</strong></div>
                 <div class="receipt-row" style="margin-top: 5px;"><span>Institución Emisora:</span><strong>Hey Banco (SPEI)</strong></div>
@@ -1347,27 +1441,17 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
                 renderizarHistorial(allMovements);
                 renderCredito();
                 actualizarResumen();
+                tfActualizar(); renderUltimas();
             });
         }
 
         window.ejecutarTransferenciaFirestore = async function() {
-            const clabe = document.getElementById('t-clabe').value;
-            const conc = document.getElementById('t-concepto').value;
-            const monto = parseFloat(document.getElementById('t-monto').value);
-            const fechaProg = document.getElementById('t-fecha').value; 
-
             if(document.getElementById('toggle-lock').checked) {
                 return window.toast('Desbloquea la tarjeta en "Seguridad" para transferir.', 'error');
             }
-
-            if(!clabe || !conc || isNaN(monto) || monto <= 0) {
-                return window.toast('Completa todos los campos correctamente.', 'error');
-            }
-            if(monto > saldoActual) {
-                return window.toast('Fondos insuficientes en la cuenta.', 'error');
-            }
-
-            return window.pedirNip({ clabe, conc, monto, fechaProg });
+            const d = tfLeer(), razon = tfRazon(d);
+            if(razon) return window.toast(razon, 'error');
+            return window.pedirNip(d);
         }
 
         const fechaHoy = () => new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -1384,28 +1468,33 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             });
         }
 
-        async function procesarTransferencia({ clabe, conc, monto, fechaProg }) {
+        async function procesarTransferencia(d) {
+            const { clabe, conc, monto, fechaProg } = d;
             const btn = document.getElementById('btn-transferir');
             btn.textContent = "Procesando...";
             btn.disabled = true;
             try {
                 let fechaTexto = fechaHoy();
+                const extra = { benef: d.benef, banco: d.banco, destino: clabe, tipoDestino: d.tipo, refNum: d.ref };
                 if(fechaProg) {
-                    fechaTexto = `Prog: ${new Date(fechaProg).toLocaleDateString('es-MX')}`;
-                    await addDoc(movRef, { tipo: 'gasto', conc: `PROGRAMADO: ${conc}`, monto, fecha: fechaTexto, icon: '⏳', programado: true, timestamp: Date.now() });
-                    window.toast(`Transferencia programada para ${fechaTexto}.`);
+                    fechaTexto = `Prog: ${new Date(fechaProg).toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}`;
+                    await addDoc(movRef, { tipo: 'gasto', conc: `PROGRAMADO: ${conc}`, monto, fecha: fechaTexto, icon: '⏳', programado: true, timestamp: Date.now(), ...extra });
+                    window.toast(`Transferencia programada: ${fechaTexto}.`);
                 } else {
-                    await registrarMovimiento({ tipo: 'gasto', conc: `SPEI: ${conc}`, monto, fecha: fechaTexto, icon: '🏦' });
+                    await registrarMovimiento({ tipo: 'gasto', conc: `SPEI: ${conc}`, monto, fecha: fechaTexto, icon: '🏦', spei: true, ...extra });
                     window.toast('Transferencia exitosa.');
                 }
-                ['t-clabe', 't-concepto', 't-monto', 't-fecha'].forEach(id => document.getElementById(id).value = '');
-                window.mostrarComprobante(clabe, conc, monto, fechaTexto);
+                if(d.guardar && !contactos.some(c => c.destino === clabe)) {
+                    addDoc(contRef, { nombre: d.benef, tipo: d.tipo, destino: clabe, banco: d.banco, creado: Date.now() }).catch(console.error);
+                }
+                tfLimpiar();
+                window.mostrarComprobante({ ...d, fecha: fechaTexto });
             } catch (error) {
                 console.error(error);
                 window.toast(error.message === 'SIN_FONDOS' ? 'Fondos insuficientes en la cuenta.' : 'Error de conexión con la base de datos.', 'error');
             } finally {
-                btn.textContent = "Transferir Fondos";
-                btn.disabled = false;
+                btn.textContent = "Revisar y transferir";
+                tfActualizar();
             }
         }
 
@@ -1543,7 +1632,7 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
         const modoT = {}, revT = {}, flipT = {}, revTimer = {};
         let animId = null;
         const grupos = n => String(n).replace(/(\d{4})(?=\d)/g, '$1 ');
-        const titular = () => ((document.getElementById('perfil-nombre') || {}).value || 'Emi').trim().toUpperCase();
+        const titular = () => String(perfil.nombre || 'Emi').trim().toUpperCase();
         const logoRed = n => n === 'mc' ? '<div class="vmc" aria-label="Mastercard"><i></i><i></i></div>' : '<div class="vvisa" aria-label="Visa">VISA</div>';
         const ICON_CL = '<svg class="vcl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 8a6 6 0 0 1 0 8M12 5a10 10 0 0 1 0 14M16 2.5a14 14 0 0 1 0 19"/></svg>';
 
@@ -1687,10 +1776,247 @@ body.enter .history-item:nth-child(1){animation-delay:1s}body.enter .history-ite
             } finally { btn.disabled = false; }
         }
 
+        // --- Transferencias SPEI ---
+        const LIMITE_SPEI = 50000;
+        const CLABE_PROPIA = '012345678909876546';
+        const TIPO_LBL = { clabe: 'Destino (CLABE)', tarjeta: 'Destino (Tarjeta)', celular: 'Destino (Celular)' };
+        const BANCOS = { '002': 'Banamex', '012': 'BBVA México', '014': 'Santander', '021': 'HSBC', '030': 'BanBajío', '036': 'Inbursa', '042': 'Mifel', '044': 'Scotiabank', '058': 'Banregio', '059': 'Invex', '062': 'Afirme', '072': 'Banorte', '102': 'ABN AMRO', '103': 'American Express', '112': 'Bmonex', '127': 'Azteca', '130': 'Compartamos', '137': 'BanCoppel', '138': 'Ualá', '145': 'BBase', '147': 'Bankaool', '155': 'ICBC', '646': 'STP', '659': 'Asp Integra', '661': 'Klar', '722': 'Mercado Pago W', '728': 'Spin by OXXO', '901': 'CLS' };
+        const dig = v => String(v || '').replace(/\D/g, '');
+        const fm = n => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(n);
+        function clabeValida(c) {
+            if(!/^\d{18}$/.test(c)) return false;
+            const w = [3, 7, 1]; let t = 0;
+            for(let i = 0; i < 17; i++) t += (+c[i] * w[i % 3]) % 10;
+            return (10 - t % 10) % 10 === +c[17];
+        }
+        function luhnOk(n) {
+            let t = 0;
+            for(let i = 0; i < n.length; i++) { let d = +n[n.length - 1 - i]; if(i % 2) { d *= 2; if(d > 9) d -= 9; } t += d; }
+            return t % 10 === 0;
+        }
+        const redTarjeta = n => n[0] === '4' ? 'Visa' : /^(5[1-5]|2[2-7])/.test(n) ? 'Mastercard' : '';
+        let tfTipo = 'clabe', tfProg = false, contactos = [], tfUlt = [];
+        const TF_TXT = {
+            clabe: ['CLABE interbancaria (18 dígitos)', 18, '000000000000000000', 'Ingresa los 18 dígitos de la CLABE'],
+            tarjeta: ['Número de tarjeta de débito (16 dígitos)', 16, '0000 0000 0000 0000', 'Ingresa los 16 dígitos de la tarjeta'],
+            celular: ['Número de celular (10 dígitos)', 10, '998 000 0000', 'Ingresa el celular a 10 dígitos']
+        };
+        const AV_COL = ['#2563eb', '#7c3aed', '#0d9488', '#db2777', '#d97706', '#4f46e5'];
+        const iniciales = n => String(n).trim().split(/\s+/).filter(w => /[A-Za-zÁÉÍÓÚÑáéíóúñ]/.test(w[0])).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+        const colorDe = n => AV_COL[[...String(n)].reduce((a, c) => a + c.charCodeAt(0), 0) % AV_COL.length];
+        const refAleatoria = () => String(Math.floor(1000000 + Math.random() * 9000000));
+        const $tf = id => document.getElementById(id);
+
+        function tfUsadoHoy() {
+            const ini = new Date(); ini.setHours(0, 0, 0, 0);
+            return allMovements.filter(m => m.spei && m.timestamp >= ini.getTime()).reduce((a, m) => a + m.monto, 0);
+        }
+        function tfEstado() {
+            const tipo = tfTipo, d = dig($tf('t-clabe').value), len = TF_TXT[tipo][1];
+            const bancoSel = $tf('t-banco').value;
+            let banco = '', c = '', t = '', valido = false;
+            if(!d) t = TF_TXT[tipo][3];
+            else if(d.length < len) { c = 'warn'; t = `Faltan ${len - d.length} dígito${len - d.length === 1 ? '' : 's'}`; }
+            else if(tipo === 'clabe') {
+                banco = BANCOS[d.slice(0, 3)] || '';
+                if(!banco) { c = 'bad'; t = 'Banco no reconocido: revisa los primeros 3 dígitos'; }
+                else if(!clabeValida(d)) { c = 'bad'; t = 'CLABE inválida: revisa los dígitos'; }
+                else if(d === CLABE_PROPIA) { c = 'bad'; t = 'No puedes transferir a tu propia cuenta'; }
+                else { c = 'ok'; t = `${banco} · CLABE válida`; valido = true; }
+            } else if(tipo === 'tarjeta') {
+                banco = bancoSel;
+                if(!luhnOk(d)) { c = 'bad'; t = 'Número de tarjeta inválido'; }
+                else if(!banco) { c = 'warn'; t = 'Selecciona el banco destino'; }
+                else { c = 'ok'; t = `Tarjeta ${redTarjeta(d)} válida · ${banco}`.replace('  ', ' '); valido = true; }
+            } else {
+                banco = bancoSel;
+                if(!banco) { c = 'warn'; t = 'Selecciona el banco destino'; }
+                else { c = 'ok'; t = `Celular válido · ${banco}`; valido = true; }
+            }
+            return { tipo, d, banco, c, t, valido };
+        }
+        function tfLeer() {
+            const st = tfEstado();
+            return { tipo: st.tipo, clabe: st.d, banco: st.banco, valido: st.valido, estTxt: st.t,
+                benef: $tf('t-benef').value.trim(), conc: $tf('t-concepto').value.trim(), monto: parseFloat($tf('t-monto').value) || 0,
+                ref: dig($tf('t-ref').value), fechaProg: tfProg ? $tf('t-fecha').value : '', guardar: $tf('t-guardar').checked };
+        }
+        const tfRestante = () => Math.max(0, LIMITE_SPEI - tfUsadoHoy());
+        function tfRazon(d) {
+            if(!d.valido) return 'Completa un destino válido.';
+            if(!d.benef) return 'Escribe el nombre del beneficiario.';
+            if(d.monto <= 0) return 'Ingresa el monto a transferir.';
+            if(!d.conc) return 'Escribe el concepto del pago.';
+            if(tfProg) {
+                if(!d.fechaProg) return 'Elige la fecha y hora de envío.';
+                if(new Date(d.fechaProg).getTime() <= Date.now()) return 'La fecha programada debe ser futura.';
+            } else {
+                if(d.monto > saldoActual) return 'Fondos insuficientes en tu cuenta.';
+                if(d.monto > tfRestante()) return `Excedes tu límite diario SPEI. Hoy te quedan ${fm(tfRestante())}.`;
+            }
+            return '';
+        }
+        window.tfActualizar = function() {
+            if(!$tf('t-clabe')) return;
+            const st = tfEstado(), d = tfLeer();
+            const e = $tf('tf-st'); e.className = 'tf-st ' + st.c; e.textContent = st.t;
+            $tf('tf-banco-wrap').style.display = tfTipo === 'clabe' ? 'none' : 'block';
+            $tf('tf-saldo').textContent = mxn(saldoActual);
+            const usado = tfUsadoHoy(), pct = Math.min(100, usado / LIMITE_SPEI * 100);
+            $tf('tf-lim').textContent = `Límite diario SPEI: ${fm(usado)} de ${fm(LIMITE_SPEI)} usados hoy`;
+            const bar = $tf('tf-lim-bar'); bar.style.width = pct + '%'; bar.style.background = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warning)' : 'var(--accent)';
+            const dest = st.d ? (tfTipo === 'celular' ? st.d.replace(/(\d{3})(\d{3})(\d{0,4})/, '$1 $2 $3').trim() : '•••• ' + st.d.slice(-4)) : '—';
+            $tf('sm-destino').textContent = dest;
+            $tf('sm-banco').textContent = st.banco || '—';
+            $tf('sm-benef').textContent = d.benef || '—';
+            $tf('sm-conc').textContent = d.conc || '—';
+            $tf('sm-fecha').textContent = tfProg ? (d.fechaProg ? new Date(d.fechaProg).toLocaleString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Elige fecha') : 'Inmediata';
+            $tf('sm-total').textContent = fm(d.monto);
+            const razon = tfRazon(d);
+            const dirty = st.d || d.benef || d.conc || d.monto;
+            $tf('tf-hint').textContent = dirty ? razon : '';
+            $tf('btn-transferir').disabled = !!razon;
+            $tf('btn-transferir').textContent = tfProg ? 'Programar transferencia' : 'Revisar y transferir';
+        }
+        window.setTipoDestino = function(t) {
+            tfTipo = t;
+            document.querySelectorAll('#tf-tipo button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+            const [lbl, len, ph] = TF_TXT[t];
+            $tf('tf-lbl').textContent = lbl; const i = $tf('t-clabe');
+            i.maxLength = len; i.placeholder = ph; i.value = dig(i.value).slice(0, len);
+            tfActualizar();
+        }
+        window.setProg = function(v) {
+            tfProg = v;
+            document.querySelectorAll('#tf-cuando button').forEach(b => b.classList.toggle('on', (b.dataset.p === '1') === v));
+            $tf('tf-fecha-wrap').style.display = v ? 'block' : 'none';
+            if(v) { const n = new Date(Date.now() + 3600e3); n.setMinutes(0, 0, 0); const p = x => String(x).padStart(2, '0');
+                $tf('t-fecha').min = `${n.getFullYear()}-${p(n.getMonth() + 1)}-${p(n.getDate())}T${p(n.getHours())}:00`; }
+            tfActualizar();
+        }
+        window.tfMonto = function(n) { $tf('t-monto').value = n > 0 ? String(Math.floor(n * 100) / 100) : ''; tfActualizar(); }
+        function tfLimpiar() {
+            ['t-clabe', 't-benef', 't-concepto', 't-monto', 't-fecha'].forEach(id => $tf(id).value = '');
+            $tf('t-guardar').checked = false; $tf('t-ref').value = refAleatoria(); $tf('t-banco').value = '';
+            setProg(false);
+        }
+        function renderChips() {
+            $tf('tf-chips').innerHTML = [500, 1000, 2500, 5000].map(n => `<button onclick="tfMonto(${n})">${fm(n).replace('.00', '')}</button>`).join('')
+                + `<button onclick="tfMonto(Math.min(${saldoActual}, ${tfRestante()}))">Máximo</button>`;
+        }
+
+        // Contactos (Firestore: colección "contactos")
+        const CONT_BASE = [
+            { nombre: 'Fondo Familiar Remodelación', tipo: 'clabe', destino: '012180000123456782', banco: 'BBVA México' },
+            { nombre: 'Host Kukulcán Roleplay', tipo: 'clabe', destino: '072180000987654320', banco: 'Banorte' },
+            { nombre: 'Proveedor Point Smart', tipo: 'clabe', destino: '722969001234567892', banco: 'Mercado Pago W' }
+        ];
+        async function sembrarContactos() {
+            try {
+                const snap = await getDoc(cuentaRef);
+                if(snap.exists() && snap.data().contSembrados) return;
+                for(let i = 0; i < CONT_BASE.length; i++) await setDoc(doc(contRef, 'contacto-' + (i + 1)), { ...CONT_BASE[i], creado: Date.now() + i });
+                await setDoc(cuentaRef, { contSembrados: true }, { merge: true });
+            } catch (e) { console.error(e); }
+        }
+        function escucharContactos() {
+            onSnapshot(query(contRef, orderBy('creado')), (snap) => {
+                contactos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderContactos();
+            }, (e) => console.error(e));
+        }
+        function renderContactos() {
+            const el = $tf('tf-contacts'); if(!el) return;
+            el.innerHTML = contactos.length ? contactos.map(c => `<div class="tf-ct" onclick="tfUsarContacto('${c.id}')" role="button" tabindex="0">
+                <button class="tf-x" onclick="event.stopPropagation();tfBorrarContacto('${c.id}')" aria-label="Eliminar contacto">×</button>
+                <div class="tf-av" style="background:${colorDe(c.nombre)}">${esc(iniciales(c.nombre))}</div>
+                <strong>${esc(c.nombre)}</strong><small>${esc(c.banco || '')}</small></div>`).join('')
+                : '<div class="text-sm">Aún no tienes contactos. Marca "Guardar como contacto" en tu próxima transferencia.</div>';
+        }
+        function tfRellenar(c) {
+            setTipoDestino(c.tipo || 'clabe');
+            $tf('t-clabe').value = c.destino || '';
+            if(c.tipo && c.tipo !== 'clabe') $tf('t-banco').value = c.banco || '';
+            $tf('t-benef').value = c.nombre || c.benef || '';
+            tfActualizar();
+        }
+        window.tfUsarContacto = function(id) {
+            const c = contactos.find(x => x.id === id); if(!c) return;
+            tfRellenar(c); $tf('t-monto').focus(); window.toast(`Datos de ${c.nombre} cargados.`);
+        }
+        window.tfBorrarContacto = async function(id) {
+            const c = contactos.find(x => x.id === id); if(!c) return;
+            if(!confirm(`¿Eliminar a "${c.nombre}" de tus contactos?`)) return;
+            try { await deleteDoc(doc(contRef, id)); window.toast('Contacto eliminado.'); }
+            catch (e) { console.error(e); window.toast('No se pudo eliminar. Revisa tu conexión.', 'error'); }
+        }
+        function renderUltimas() {
+            const el = $tf('tf-ultimas'); if(!el) return;
+            tfUlt = allMovements.filter(m => m.destino && !m.programado).slice(0, 4);
+            el.innerHTML = tfUlt.length ? tfUlt.map((m, i) => `<div class="tf-ult">
+                <div class="tf-av" style="background:${colorDe(m.benef || m.conc)}">${esc(iniciales(m.benef || m.conc))}</div>
+                <div><strong>${esc(m.benef || m.conc)}</strong><small>${esc(m.fecha || '')} · ${esc(m.banco || '')}</small></div>
+                <div style="text-align:right"><strong>${mxn(m.monto)}</strong><button class="btn-outline" onclick="tfRepetir(${i})">Repetir</button></div></div>`).join('')
+                : '<div class="text-sm">Todavía no has hecho transferencias con destinatario.</div>';
+        }
+        window.tfRepetir = function(i) {
+            const m = tfUlt[i]; if(!m) return;
+            tfRellenar({ tipo: m.tipoDestino, destino: m.destino, banco: m.banco, nombre: m.benef });
+            $tf('t-concepto').value = String(m.conc).replace(/^(SPEI|PROGRAMADO): /, ''); tfMonto(m.monto);
+            window.scrollTo(0, 0); document.querySelector('.content').scrollTop = 0;
+            window.toast('Transferencia cargada. Revisa y confirma.');
+        }
+        function tfInit() {
+            $tf('t-banco').innerHTML = '<option value="">Selecciona un banco</option>' + [...new Set(Object.values(BANCOS))].filter(b => b !== 'CLS').sort((a, b) => a.localeCompare(b, 'es')).map(b => `<option>${b}</option>`).join('');
+            $tf('t-ref').value = refAleatoria(); renderChips(); renderContactos(); renderUltimas(); tfActualizar();
+        }
+
+        // --- Perfil (Firestore: cuenta/perfil) ---
+        const fmtTel = v => { const d = dig(v).slice(0, 10); return d.length === 10 ? d.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3') : d; };
+        function pintarPerfil() {
+            const set = (id, v) => { const e = $tf(id); if(e && document.activeElement !== e) e.value = v || ''; };
+            set('perfil-nombre', perfil.nombre); set('perfil-correo', perfil.correo); set('perfil-tel', perfil.telefono);
+            set('perfil-nac', perfil.nacimiento); set('perfil-dom', perfil.domicilio);
+            const nom = perfil.nombre || 'Cliente', ini = nom.trim().charAt(0).toUpperCase() || 'C';
+            document.querySelector('.avatar').textContent = ini; $tf('pf-av').textContent = ini;
+            $tf('pf-nom').textContent = nom; $tf('pf-mail').textContent = perfil.correo || '';
+            $tf('opt-personal').textContent = `Cuenta Personal (${nom.split(' ')[0]})`;
+            $tf('codi-nom').textContent = `${nom} - Cuenta Personal`;
+            renderCredito();
+        }
+        function estadoPerfil(txt, cls) { const e = $tf('pf-sync'); if(e) { e.textContent = txt; e.className = 'st ' + cls; } }
+        async function iniciarPerfil() {
+            try {
+                const snap = await getDoc(perfilRef);
+                if(!snap.exists()) await setDoc(perfilRef, PERFIL_BASE);
+                onSnapshot(perfilRef, (s) => {
+                    perfil = { ...PERFIL_BASE, ...(s.data() || {}) };
+                    pintarPerfil();
+                    estadoPerfil(s.metadata && s.metadata.hasPendingWrites ? 'Guardando…' : 'Guardado en Firebase', s.metadata && s.metadata.hasPendingWrites ? 'st-warn' : 'st-ok');
+                }, (e) => { console.error(e); estadoPerfil('Sin conexión', 'st-bad'); });
+            } catch (e) { console.error(e); estadoPerfil('Sin conexión', 'st-bad'); window.toast('No se pudieron cargar tus datos personales desde Firebase.', 'error'); }
+        }
+        window.guardarPerfil = async function() {
+            const nombre = $tf('perfil-nombre').value.trim().replace(/\s+/g, ' ');
+            const correo = $tf('perfil-correo').value.trim();
+            const telefono = fmtTel($tf('perfil-tel').value);
+            const nacimiento = $tf('perfil-nac').value, domicilio = $tf('perfil-dom').value.trim();
+            if(nombre.length < 2) return window.toast('Escribe tu nombre completo.', 'error');
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) return window.toast('Escribe un correo válido.', 'error');
+            if(dig(telefono).length !== 10) return window.toast('El teléfono debe tener 10 dígitos.', 'error');
+            const btn = $tf('btn-perfil'); btn.disabled = true; btn.textContent = 'Guardando…';
+            try {
+                await setDoc(perfilRef, { nombre, correo, telefono, nacimiento, domicilio, actualizado: Date.now() }, { merge: true });
+                $tf('perfil-tel').value = telefono;
+                window.toast('Datos personales guardados en Firebase.');
+            } catch (e) { console.error(e); window.toast('No se pudo guardar. Revisa tu conexión.', 'error'); }
+            finally { btn.disabled = false; btn.textContent = 'Guardar cambios'; }
+        }
+
         // Inicialización
-        pintarNav(); pintarTeclado(); renderCredito();
+        pintarNav(); pintarTeclado(); renderCredito(); tfInit();
         actualizarSaldos();
-        iniciarCuenta().then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarTarjetas()).then(() => escucharTarjetas()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
+        iniciarCuenta().then(() => iniciarPerfil()).then(() => sembrarContactos()).then(() => escucharContactos()).then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarTarjetas()).then(() => escucharTarjetas()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
 
     </script>
 </body>
