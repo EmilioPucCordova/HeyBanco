@@ -234,6 +234,32 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
 .cc .progress-bar-bg{background:rgba(255,255,255,.22)}
 .cc-meta{display:flex;justify-content:space-between;gap:.25rem .75rem;font-size:.78rem;opacity:.9;margin-top:.7rem;flex-wrap:wrap}
 @media(min-width:700px){.cc-grid{grid-template-columns:repeat(3,1fr)}}
+.cc-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem}
+.tj-kv{background:var(--bg-elevated);border-radius:12px;padding:.7rem .85rem;min-width:0}
+.tj-kv span{display:block;font-size:.72rem;color:var(--text-muted)}
+.tj-kv strong{font-size:.95rem;overflow-wrap:anywhere}
+.cc-grid{grid-auto-flow:column;grid-auto-columns:86%;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -1.15rem;padding:0 1.15rem .5rem;scrollbar-width:none;gap:1rem}
+.cw{scroll-snap-align:center;display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.cc{aspect-ratio:1.586/1;display:flex;flex-direction:column;justify-content:space-between;padding:1.1rem 1.25rem;cursor:pointer;box-shadow:0 14px 30px rgba(0,0,0,.35);transition:transform .2s}
+.cc:active{transform:scale(.985)}
+.cc-name{font-weight:700;font-size:1rem}
+.cc-net{font-style:italic;font-weight:800;letter-spacing:1px;font-size:1.05rem}
+.cc-mid{display:flex;align-items:center;gap:.75rem}
+.cc-num{font-size:1.05rem;letter-spacing:2px;font-weight:600}
+.cc-bot{display:flex;justify-content:space-between;align-items:flex-end}
+.cc-av{font-size:1.35rem;font-weight:800;letter-spacing:-.4px;margin:0}
+.pay-strip{background:var(--bg-elevated);border-radius:16px;padding:.9rem;display:flex;flex-direction:column;gap:.7rem}
+.pay-row{display:flex;justify-content:space-between;gap:1rem}
+.pay-row strong{font-size:1.05rem}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:.25rem .65rem;border-radius:999px}
+.st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-ok{color:var(--success);background:rgba(34,197,94,.12)}
+.st-warn{color:var(--warning);background:rgba(245,158,11,.14)}
+.st-bad{color:var(--danger);background:rgba(239,68,68,.14)}
+.tj-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.75rem 0 1.25rem}
+.tj-pay{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.tj-pay:last-child{border-bottom:0}
+@media(min-width:700px){.cc-grid{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(3,1fr);overflow:visible;margin:0;padding:0}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -417,6 +443,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
              <div id="sec-tarjetas" class="section-panel">
                 <div class="panel" style="margin-bottom:1rem">
                     <h3 class="panel-title">Tarjetas de crédito</h3>
+                    <div class="cc-sum" id="ui-credito-sum"></div>
                     <div class="cc-grid" id="ui-credito"></div>
                 </div>
                 <div class="grid-layout">
@@ -562,6 +589,23 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         </div>
     </div>
 
+    <!-- Tarjeta de crédito: detalle y pago -->
+    <div class="modal-overlay" id="modal-tarj" onclick="if(event.target===this)cerrarTarjeta()">
+        <div class="comprobante-box" style="text-align:left">
+            <div class="sheet-head"><h3 id="tj-titulo">Tarjeta</h3><button class="icon-btn" onclick="cerrarTarjeta()" aria-label="Cerrar">✕</button></div>
+            <div class="tj-grid" id="tj-info"></div>
+            <div id="tj-pay">
+                <label class="text-sm" style="margin-top:0">¿Cuánto vas a pagar?</label>
+                <div class="seg" id="tj-seg" style="margin-top:.5rem"><button data-m="min" onclick="setModoPago('min')">Mínimo</button><button data-m="total" onclick="setModoPago('total')">Total</button><button data-m="otro" onclick="setModoPago('otro')">Otro</button></div>
+                <input type="number" id="tj-monto" inputmode="decimal" placeholder="$0.00">
+                <div class="text-sm" style="margin-top:.6rem">Se descontará de tu cuenta principal: <strong id="tj-cuenta"></strong></div>
+                <button class="btn" id="btn-tj" style="margin-top:1rem" onclick="confirmarPagoTarjeta()">Pagar tarjeta</button>
+            </div>
+            <h4 style="margin:1.5rem 0 .25rem">Últimos pagos</h4>
+            <div id="tj-hist"></div>
+        </div>
+    </div>
+
     <!-- Modal NIP -->
     <div class="modal-overlay" id="modal-nip">
         <div class="comprobante-box">
@@ -661,6 +705,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         const movRef = collection(db, "movimientos");
         const cuentaRef = doc(db, "cuenta", "principal");
         const gdRef = collection(db, "guardaditos");
+        const tarjRef = collection(db, "tarjetas");
 
         // Variables Globales
         const SALDO_INICIAL = 102347.24;
@@ -1148,6 +1193,7 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
                 allMovements = [];
                 snapshot.forEach(d => allMovements.push(d.data()));
                 renderizarHistorial(allMovements);
+                renderCredito();
                 actualizarResumen();
             });
         }
@@ -1279,10 +1325,10 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
         }
 
         // --- Tarjetas de crédito (datos de demostración; solo se muestran los últimos 4 dígitos) ---
-        const TARJ = [
-            { n: 'Hey Platinum', l4: '7741', lim: 240000, usado: 62480.35, corte: 12, bg: 'linear-gradient(135deg,#1d4ed8,#0b1b4a)' },
-            { n: 'Hey Oro', l4: '3305', lim: 150000, usado: 18725.90, corte: 20, bg: 'linear-gradient(135deg,#b8862b,#3a2a0c)' },
-            { n: 'Pointbuy Negocios', l4: '9168', lim: 100000, usado: 41310.00, corte: 5, bg: 'linear-gradient(135deg,#0f766e,#052e2b)' }
+        const TARJ_BASE = [
+            { n: 'Hey Platinum', l4: '7741', lim: 344000, usado: 62480.35, corte: 12, bg: 'linear-gradient(135deg,#1d4ed8,#0b1b4a)' },
+            { n: 'Hey Oro', l4: '3305', lim: 137000, usado: 18725.90, corte: 20, bg: 'linear-gradient(135deg,#b8862b,#3a2a0c)' },
+            { n: 'Pointbuy Negocios', l4: '9168', lim: 532000, usado: 41310.00, corte: 5, bg: 'linear-gradient(135deg,#0f766e,#052e2b)' }
         ];
         function proxFecha(dia, suma = 0) {
             const h = new Date(); let d = new Date(h.getFullYear(), h.getMonth(), dia);
@@ -1290,24 +1336,139 @@ body.enter .quick{animation-delay:.08s}body.enter .grid-3{animation-delay:.16s}b
             d.setDate(d.getDate() + suma);
             return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
         }
+        let tarjetas = [];
+        const TARJ_VER = 2; // súbela cuando cambies los límites de TARJ_BASE para actualizarlos en Firebase
+        async function sembrarTarjetas() {
+            try {
+                const snap = await getDoc(cuentaRef);
+                const c = snap.exists() ? snap.data() : {};
+                if(!c.tarjSembradas) {
+                    for(let i = 0; i < TARJ_BASE.length; i++) await addDoc(tarjRef, { ...TARJ_BASE[i], creado: Date.now() + i });
+                    await setDoc(cuentaRef, { tarjSembradas: true, tarjVer: TARJ_VER }, { merge: true });
+                } else if((c.tarjVer || 1) < TARJ_VER) {
+                    const docs = await getDocs(tarjRef);
+                    for(const d of docs.docs) {
+                        const base = TARJ_BASE.find(b => b.n === d.data().n);
+                        if(base) await setDoc(d.ref, { lim: base.lim }, { merge: true });
+                    }
+                    await setDoc(cuentaRef, { tarjVer: TARJ_VER }, { merge: true });
+                }
+            } catch (e) { console.error(e); }
+        }
+        function escucharTarjetas() {
+            onSnapshot(query(tarjRef, orderBy('creado')), (snap) => {
+                tarjetas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderCredito();
+            });
+        }
+        const hoy0 = () => { const h = new Date(); return new Date(h.getFullYear(), h.getMonth(), h.getDate()); };
+        const fmtF = d => d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+        const proxCorte = dia => { const h = hoy0(); let x = new Date(h.getFullYear(), h.getMonth(), dia); if(x < h) x = new Date(h.getFullYear(), h.getMonth() + 1, dia); return x; };
+        // Fecha límite = corte + 20 días; se toma la primera que aún no pasa
+        const limitePago = dia => { const h = hoy0(); for(let k = -1; k <= 1; k++) { const x = new Date(h.getFullYear(), h.getMonth() + k, dia + 20); if(x >= h) return x; } return h; };
+        const pagoMin = t => t.usado > 0 ? Math.min(t.usado, Math.max(r2(t.usado * 0.05), 500)) : 0;
+        function estadoPago(t) {
+            const dias = Math.round((limitePago(t.corte) - hoy0()) / 864e5);
+            if(t.usado <= 0) return { c: 'st-ok', txt: 'Sin saldo por pagar', dias };
+            if(dias <= 3) return { c: 'st-bad', txt: dias === 0 ? 'Vence hoy' : `Vence en ${dias} día${dias === 1 ? '' : 's'}`, dias };
+            if(dias <= 10) return { c: 'st-warn', txt: `Vence en ${dias} días`, dias };
+            return { c: 'st-ok', txt: 'Al corriente', dias };
+        }
+
         function renderCredito() {
             const el = document.getElementById('ui-credito'); if(!el) return;
-            el.innerHTML = TARJ.map(t => {
-                const pct = Math.min(100, t.usado / t.lim * 100);
-                return `<div class="cc" style="background:${t.bg}">
-                    <div class="cc-top"><span>${t.n}</span><small>•••• ${t.l4}</small></div>
-                    <div class="cc-av">${mxn(t.lim - t.usado)}</div>
-                    <div class="cc-lbl">Disponible de ${mxn(t.lim)}</div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="background:#fff;width:${pct}%"></div></div>
-                    <div class="cc-meta"><span>Usado ${mxn(t.usado)}</span><span>Corte ${proxFecha(t.corte)}</span><span>Pago ${proxFecha(t.corte, 20)}</span></div>
-                </div>`;
+            if(!tarjetas.length) { el.innerHTML = '<div class="text-sm">Cargando tarjetas…</div>'; return; }
+            const lim = tarjetas.reduce((a, t) => a + t.lim, 0), usado = tarjetas.reduce((a, t) => a + t.usado, 0);
+            document.getElementById('ui-credito-sum').innerHTML =
+                `<div class="tj-kv"><span>Límite total</span><strong>${mxn(lim)}</strong></div><div class="tj-kv"><span>Disponible</span><strong style="color:var(--success)">${mxn(lim - usado)}</strong></div><div class="tj-kv"><span>Saldo usado</span><strong>${mxn(usado)}</strong></div>`;
+            el.innerHTML = tarjetas.map((t, i) => {
+                const pct = Math.min(100, t.usado / t.lim * 100), st = estadoPago(t);
+                const col = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warning)' : 'var(--accent)';
+                return `<div class="cw">
+                    <div class="cc" style="background:${t.bg}" role="button" tabindex="0" onclick="abrirTarjeta('${t.id}')" onkeydown="if(event.key==='Enter')abrirTarjeta('${t.id}')">
+                        <div class="flex-between"><span class="cc-name">${esc(t.n)}</span><span class="cc-net">${i % 2 ? 'MASTERCARD' : 'VISA'}</span></div>
+                        <div class="cc-mid"><div class="chip"></div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round"><path d="M8 8a6 6 0 0 1 0 8M12 5a10 10 0 0 1 0 14M16 2.5a14 14 0 0 1 0 19"/></svg></div>
+                        <div class="cc-num">•••• •••• •••• ${esc(t.l4)}</div>
+                        <div class="cc-bot"><div><div class="cc-lbl">Disponible</div><div class="cc-av">${mxn(t.lim - t.usado)}</div></div><div style="text-align:right"><div class="cc-lbl">Límite</div><strong>${mxn(t.lim)}</strong></div></div>
+                    </div>
+                    <div class="pay-strip">
+                        <div class="flex-between"><span class="st ${st.c}">${st.txt}</span><span class="text-sm">${Math.round(pct)}% usado</span></div>
+                        <div class="progress-bar-bg" style="margin:0"><div class="progress-bar-fill" style="background:${col};width:${pct}%"></div></div>
+                        <div class="pay-row"><div><div class="text-sm">Para no generar intereses</div><strong>${mxn(t.usado)}</strong></div><div style="text-align:right"><div class="text-sm">Fecha límite</div><strong>${fmtF(limitePago(t.corte))}</strong></div></div>
+                        <button class="btn" onclick="abrirTarjeta('${t.id}')" ${t.usado <= 0 ? 'disabled' : ''}>Pagar tarjeta</button>
+                    </div></div>`;
             }).join('');
+            if(document.getElementById('modal-tarj').classList.contains('active')) pintarTarjeta();
+        }
+
+        // --- Detalle y pago de tarjeta (se descuenta de la cuenta principal) ---
+        let tjId = null, tjModo = 'total';
+        const tjActual = () => tarjetas.find(t => t.id === tjId);
+        function pintarTarjeta() {
+            const t = tjActual(); if(!t) return;
+            const st = estadoPago(t);
+            document.getElementById('tj-titulo').textContent = `${t.n} •••• ${t.l4}`;
+            document.getElementById('tj-info').innerHTML = [
+                ['Límite', mxn(t.lim)], ['Disponible', mxn(t.lim - t.usado)], ['Saldo usado', mxn(t.usado)], ['Pago mínimo', mxn(pagoMin(t))],
+                ['Próximo corte', fmtF(proxCorte(t.corte))], ['Fecha límite de pago', fmtF(limitePago(t.corte))]
+            ].map(([k, v]) => `<div class="tj-kv"><span>${k}</span><strong>${v}</strong></div>`).join('');
+            document.getElementById('tj-cuenta').textContent = mxn(saldoActual);
+            document.getElementById('tj-pay').style.display = t.usado > 0 ? 'block' : 'none';
+            const pagos = allMovements.filter(m => m.tarjetaId === t.id).slice(0, 5);
+            document.getElementById('tj-hist').innerHTML = pagos.length
+                ? pagos.map(m => `<div class="tj-pay"><span>${m.fecha || ''}</span><strong style="color:var(--success)">${mxn(m.monto)}</strong></div>`).join('')
+                : `<div class="text-sm" style="padding:.6rem 0">${st.c === 'st-ok' && t.usado <= 0 ? 'Sin saldo por pagar.' : 'Aún no hay pagos registrados.'}</div>`;
+        }
+        window.setModoPago = function(m) {
+            const t = tjActual(); if(!t) return;
+            tjModo = m;
+            document.querySelectorAll('#tj-seg button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+            const inp = document.getElementById('tj-monto');
+            if(m === 'min') inp.value = pagoMin(t).toFixed(2);
+            else if(m === 'total') inp.value = t.usado.toFixed(2);
+            else { inp.value = ''; inp.focus(); }
+        }
+        window.abrirTarjeta = function(id) {
+            tjId = id; pintarTarjeta(); setModoPago('total');
+            document.getElementById('tj-monto').oninput = () => {
+                tjModo = 'otro';
+                document.querySelectorAll('#tj-seg button').forEach(b => b.classList.toggle('on', b.dataset.m === 'otro'));
+            };
+            document.getElementById('modal-tarj').classList.add('active');
+        }
+        window.cerrarTarjeta = () => document.getElementById('modal-tarj').classList.remove('active');
+        window.confirmarPagoTarjeta = async function() {
+            const t = tjActual(); if(!t) return;
+            const monto = r2(parseFloat(document.getElementById('tj-monto').value));
+            if(isNaN(monto) || monto <= 0) return window.toast('Ingresa un monto mayor a 0.', 'error');
+            if(monto > t.usado + 0.001) return window.toast('El pago no puede ser mayor al saldo de la tarjeta.', 'error');
+            const btn = document.getElementById('btn-tj'); btn.disabled = true;
+            try {
+                await runTransaction(db, async (tx) => {
+                    const tRef = doc(tarjRef, t.id);
+                    const ts = await tx.get(tRef), cs = await tx.get(cuentaRef);
+                    if(!ts.exists()) throw new Error('NO_EXISTE');
+                    const saldo = cs.exists() && typeof cs.data().saldo === 'number' ? cs.data().saldo : SALDO_INICIAL;
+                    const usado = ts.data().usado || 0;
+                    if(monto > usado + 0.001) throw new Error('SOBREPAGO');
+                    if(monto > saldo) throw new Error('SIN_FONDOS');
+                    tx.set(cuentaRef, { saldo: r2(saldo - monto) }, { merge: true });
+                    tx.set(tRef, { usado: r2(Math.max(0, usado - monto)) }, { merge: true });
+                    tx.set(doc(movRef), { tipo: 'gasto', conc: `Pago tarjeta ${t.n} (${t.l4})`, monto, fecha: fechaHoy(), icon: '💳', tarjetaId: t.id, timestamp: Date.now() });
+                });
+                window.toast('Pago aplicado a tu tarjeta.');
+                const t2 = tjActual();
+                if(t2 && t2.usado > 0) setModoPago('total');
+            } catch (e) {
+                const msg = { SIN_FONDOS: 'Fondos insuficientes en la cuenta principal.', SOBREPAGO: 'El pago es mayor al saldo de la tarjeta.' }[e.message] || 'No se pudo aplicar el pago. Revisa tu conexión.';
+                window.toast(msg, 'error');
+            } finally { btn.disabled = false; }
         }
 
         // Inicialización
         pintarNav(); pintarTeclado(); renderCredito();
         actualizarSaldos();
-        iniciarCuenta().then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
+        iniciarCuenta().then(() => sembrarGuardaditos()).then(() => escucharGuardaditos()).then(() => sembrarTarjetas()).then(() => escucharTarjetas()).then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
 
     </script>
 </body>
