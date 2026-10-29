@@ -147,7 +147,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 
 @media(min-width:700px){
  .content{padding:1.5rem 1.5rem calc(var(--nav-h) + var(--sab) + 1.5rem)}
- .grid-3{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;overflow:visible;margin:0;padding:0}
+ .grid-3{grid-auto-flow:row;grid-template-columns:repeat(2,1fr);grid-auto-columns:auto;overflow:visible;margin:0;padding:0}
  .modal-overlay{align-items:center;padding:1rem}
  .comprobante-box{border-radius:24px;padding-bottom:1.5rem}
 }
@@ -168,7 +168,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
  .grid-layout{grid-template-columns:380px 1fr;align-items:start}
  #sec-inicio.active{display:block}
  #sec-inicio .grid-layout{display:grid}#sec-inicio .col{display:block}
- .grid-3{margin-bottom:1.5rem}
+ .grid-3{grid-template-columns:repeat(4,1fr);margin-bottom:1.5rem}
  #main-card{margin-bottom:1rem}.quick{margin-bottom:1rem}
  #pnl-mov{height:100%}
  .notifications-popover{left:auto;right:2rem;width:340px;top:70px}
@@ -176,6 +176,17 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
  #toast-container{bottom:24px}
  .history-list{max-height:520px;overflow-y:auto}
 }
+.stat{padding:1rem}
+.stat-v{font-size:1.45rem;font-weight:700;letter-spacing:-.5px;margin-top:.25rem}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:3px}
+.seg button{border:0;background:none;color:var(--text-muted);min-height:40px;border-radius:9px;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.cfg-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border);text-align:left}
+.cfg-row:last-of-type{border-bottom:0}
+.cfg-row .seg{min-width:170px}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;text-align:left}
+.sheet-head h3{margin:0}
+.history-item.ing .h-icon{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -190,10 +201,10 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
         <header class="topbar">
             <div class="brand brand-m"><img src="favicon.png" alt="" onerror="this.style.display='none'">Hey Banco</div>
             <div class="tb-actions">
-                <button class="icon-btn" onclick="toggleTheme()" title="Tema" aria-label="Cambiar tema">🌓</button>
+                <button class="icon-btn" onclick="abrirConfig()" title="Configuración" aria-label="Configuración"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
                 <button class="icon-btn" onclick="togglePrivacidad()" title="Ocultar saldos" aria-label="Ocultar saldos">👁️</button>
                 <button class="icon-btn" onclick="toggleNotifications()" title="Notificaciones" aria-label="Notificaciones">🔔<span class="badge"></span></button>
-                <div class="avatar" onclick="nav('ajustes')">E</div>
+                <div class="avatar" onclick="abrirConfig()">E</div>
             </div>
             <div class="notifications-popover" id="notif-box">
                 <h4 style="margin:0 0 6px">Notificaciones</h4>
@@ -216,20 +227,12 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                 
                 <!-- Widgets Superiores -->
                 <div class="grid-3">
-                    <div class="panel" style="padding: 1rem;">
-                        <div class="text-sm">Tipo de Cambio (Cancún)</div>
-                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">1 USD = $17.85 MXN</div>
-                    </div>
-                    <div class="panel" style="padding: 1rem;">
-                        <div class="text-sm">Presupuesto Mensual</div>
-                        <div class="flex-between"><span>Gastado: $12,400</span> <span>Límite: $20k</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="background: var(--warning); width: 62%;"></div></div>
-                    </div>
-                    <div class="panel" style="padding: 1rem; background: var(--accent); color: white; border:none;">
-                        <div class="text-sm" style="color: #e0e7ff;">Oferta Pre-aprobada</div>
-                        <div style="font-size: 1.2rem; font-weight: 700;">Crédito Auto: $300,000</div>
-                        <button class="btn" style="background: white; color: var(--accent); padding: 4px; margin-top: 5px;">Ver Oferta</button>
-                    </div>
+                    <div class="panel stat"><div class="text-sm">Ingresos del mes</div><div class="stat-v" style="color:var(--success)">+$<span id="w-ing">0.00</span></div></div>
+                    <div class="panel stat"><div class="text-sm">Gastos del mes</div><div class="stat-v">$<span id="w-gas">0.00</span></div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="w-bar" style="background:var(--accent);width:0"></div></div>
+                        <div class="text-sm" style="margin-top:6px">Presupuesto: $20,000</div></div>
+                    <div class="panel stat"><div class="text-sm">Tipo de cambio (Cancún)</div><div class="stat-v" style="color:var(--success)">1 USD = $17.85</div></div>
+                    <div class="panel stat" style="background:var(--accent);color:#fff;border:0"><div class="text-sm" style="color:#e0e7ff">Oferta pre-aprobada</div><div class="stat-v">Crédito Auto: $300,000</div></div>
                 </div>
 
                 <div class="grid-layout">
@@ -245,7 +248,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                                 </div>
                             </div>
                             <div style="font-size: 0.9rem; color: #cbd5e1;">Saldo Total Disponible</div>
-                            <div class="balance">$<span id="ui-balance" class="sensitive-data">32,347.24</span></div>
+                            <div class="balance">$<span id="ui-balance" class="sensitive-data">102,347.24</span></div>
                             <div class="flex-between" style="margin-top: 2rem; font-family: monospace; font-size: 1.1rem; color: #94a3b8;">
                                 <span>**** **** **** 4092</span>
                                 <span id="card-status-text">Activa</span>
@@ -280,7 +283,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                         <div class="panel" id="pnl-mov">
                             <div class="flex-between" style="margin-bottom: 1rem;">
                                 <h3 class="panel-title" style="margin:0;">Movimientos</h3>
-                                <div id="db-status" class="loader"></div>
+                                <div class="flex-gap" style="gap:.6rem"><div id="db-status" class="loader"></div><button class="btn" style="width:auto;min-height:38px;padding:.4rem .9rem;font-size:.85rem" onclick="abrirMov()">+ Registrar</button></div>
                             </div>
                             
                             <!-- Filtros -->
@@ -455,6 +458,31 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
         </div>
     </div>
 
+    <!-- Configuración -->
+    <div class="modal-overlay" id="modal-config" onclick="if(event.target===this)cerrarConfig()">
+        <div class="comprobante-box">
+            <div class="sheet-head"><h3>Configuración</h3><button class="icon-btn" onclick="cerrarConfig()" aria-label="Cerrar">✕</button></div>
+            <div class="cfg-row"><div><strong>Apariencia</strong><div class="text-sm">Tema de la aplicación</div></div>
+                <div class="seg" id="tema-seg"><button data-t="dark" onclick="setTema('dark')">Oscuro</button><button data-t="light" onclick="setTema('light')">Claro</button></div></div>
+            <div class="cfg-row"><div><strong>Ocultar saldos</strong><div class="text-sm">Muestra *** en lugar de montos</div></div>
+                <label class="switch"><input type="checkbox" id="cfg-priv" onchange="togglePrivacidad()"><span class="slider"></span></label></div>
+            <div class="cfg-row"><div><strong>Perfil</strong><div class="text-sm">Nombre, correo y teléfono</div></div>
+                <button class="btn-outline" style="padding:.5rem 1rem" onclick="cerrarConfig();nav('ajustes')">Editar</button></div>
+        </div>
+    </div>
+
+    <!-- Registrar movimiento -->
+    <div class="modal-overlay" id="modal-mov" onclick="if(event.target===this)cerrarMov()">
+        <div class="comprobante-box" style="text-align:left">
+            <div class="sheet-head"><h3>Registrar movimiento</h3><button class="icon-btn" onclick="cerrarMov()" aria-label="Cerrar">✕</button></div>
+            <div class="seg" id="mov-seg"><button data-t="gasto" onclick="setTipoMov('gasto')">Gasto</button><button data-t="ingreso" onclick="setTipoMov('ingreso')">Ingreso</button></div>
+            <label class="text-sm">Categoría</label><select id="mov-cat"></select>
+            <label class="text-sm">Concepto</label><input type="text" id="mov-conc" placeholder="Ej. Despensa">
+            <label class="text-sm">Monto (MXN)</label><input type="number" id="mov-monto" inputmode="decimal" placeholder="$0.00">
+            <button class="btn" id="btn-mov" style="margin-top:1.25rem" onclick="guardarMov()">Guardar movimiento</button>
+        </div>
+    </div>
+
     <!-- Modal NIP -->
     <div class="modal-overlay" id="modal-nip">
         <div class="comprobante-box">
@@ -473,7 +501,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
     <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc, setDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         // Nueva Configuración de Base de Datos Vinculada
         const firebaseConfig = {
@@ -489,10 +517,13 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const movRef = collection(db, "movimientos");
+        const cuentaRef = doc(db, "cuenta", "principal");
 
         // Variables Globales
-        const SALDO_INICIAL_FIJO = 32347.24;
-        let gastosSesionActual = 0; 
+        const SALDO_INICIAL = 102347.24;
+        const LIMITE_MENSUAL = 20000;
+        let saldoActual = SALDO_INICIAL;
+        let tema = 'dark'; 
         let isPrivate = false;
         let currentFilter = 'todos';
         let allMovements = []; 
@@ -510,15 +541,23 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 
         window.togglePrivacidad = function() {
             isPrivate = !isPrivate;
-            actualizarSaldos();
-            renderizarHistorial(allMovements);
+            aplicarPriv();
+            guardarPref({ privado: isPrivate });
         }
-
-        window.toggleTheme = function() {
-            const root = document.documentElement;
-            root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        function aplicarPriv() {
+            actualizarSaldos(); actualizarResumen(); renderizarHistorial(allMovements);
+            const c = document.getElementById('cfg-priv'); if(c) c.checked = isPrivate;
         }
+        function guardarPref(o) { setDoc(cuentaRef, o, { merge: true }).catch(console.error); }
+        function pintarTema() {
+            document.documentElement.setAttribute('data-theme', tema);
+            document.querySelectorAll('#tema-seg button').forEach(b => b.classList.toggle('on', b.dataset.t === tema));
+        }
+        window.setTema = function(t) { tema = t; pintarTema(); guardarPref({ tema: t }); }
+        window.abrirConfig = () => document.getElementById('modal-config').classList.add('active');
+        window.cerrarConfig = () => document.getElementById('modal-config').classList.remove('active');
 
+        
         window.copiarDato = function(txt, tipo) {
             navigator.clipboard.writeText(txt);
             window.toast(`${tipo} copiada al portapapeles.`);
@@ -600,7 +639,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
 
         function actualizarSaldos() {
             const formatter = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const saldoMostrar = SALDO_INICIAL_FIJO - gastosSesionActual;
+            const saldoMostrar = saldoActual;
             document.getElementById('ui-balance').textContent = isPrivate ? '***' : formatter.format(saldoMostrar);
             
             document.querySelectorAll('.sensitive-data').forEach(el => {
@@ -788,7 +827,7 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                 const btnPdfStr = `<button class="pdf-btn" onclick="descargarPDF('${m.conc}')">📄 PDF</button>`;
 
                 list.innerHTML += `
-                    <div class="history-item">
+                    <div class="history-item ${isGasto ? '' : 'ing'}">
                         <div style="display:flex; align-items:center;">
                             <div class="h-icon">${icon}</div>
                             <div>
@@ -812,8 +851,9 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
             onSnapshot(q, (snapshot) => {
                 document.getElementById('db-status').style.display = 'none';
                 allMovements = [];
-                snapshot.forEach(doc => allMovements.push(doc.data()));
+                snapshot.forEach(d => allMovements.push(d.data()));
                 renderizarHistorial(allMovements);
+                actualizarResumen();
             });
         }
 
@@ -827,67 +867,126 @@ input:checked+.slider:before{transform:translateX(22px);background:#fff}
                 return window.toast('Desbloquea la tarjeta en "Seguridad" para transferir.', 'error');
             }
 
-            if(!clabe || !conc || isNaN(monto)) {
+            if(!clabe || !conc || isNaN(monto) || monto <= 0) {
                 return window.toast('Completa todos los campos correctamente.', 'error');
             }
-            if(monto > (SALDO_INICIAL_FIJO - gastosSesionActual)) {
+            if(monto > saldoActual) {
                 return window.toast('Fondos insuficientes en la cuenta.', 'error');
             }
 
             return window.pedirNip({ clabe, conc, monto, fechaProg });
         }
 
+        const fechaHoy = () => new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+
+        // Registra el movimiento y actualiza el saldo en una sola transacción de Firestore
+        async function registrarMovimiento(m) {
+            await runTransaction(db, async (tx) => {
+                const snap = await tx.get(cuentaRef);
+                const saldo = snap.exists() && typeof snap.data().saldo === 'number' ? snap.data().saldo : SALDO_INICIAL;
+                const nuevo = Math.round((m.tipo === 'gasto' ? saldo - m.monto : saldo + m.monto) * 100) / 100;
+                if(nuevo < 0) throw new Error('SIN_FONDOS');
+                tx.set(cuentaRef, { saldo: nuevo }, { merge: true });
+                tx.set(doc(movRef), { ...m, timestamp: Date.now() });
+            });
+        }
+
         async function procesarTransferencia({ clabe, conc, monto, fechaProg }) {
             const btn = document.getElementById('btn-transferir');
             btn.textContent = "Procesando...";
             btn.disabled = true;
-
             try {
-                let fechaTexto = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
-                let prefijo = 'SPEI: ';
-                
+                let fechaTexto = fechaHoy();
                 if(fechaProg) {
                     fechaTexto = `Prog: ${new Date(fechaProg).toLocaleDateString('es-MX')}`;
-                    prefijo = 'PROGRAMADO: ';
+                    await addDoc(movRef, { tipo: 'gasto', conc: `PROGRAMADO: ${conc}`, monto, fecha: fechaTexto, icon: '⏳', programado: true, timestamp: Date.now() });
                     window.toast(`Transferencia programada para ${fechaTexto}.`);
-                }
-
-                await addDoc(movRef, {
-                    tipo: 'gasto',
-                    conc: `${prefijo}${conc}`,
-                    monto: monto,
-                    fecha: fechaTexto,
-                    icon: fechaProg ? '⏳' : '🏦',
-                    timestamp: Date.now() 
-                });
-
-                if(!fechaProg) {
-                    gastosSesionActual += monto;
-                    actualizarSaldos();
+                } else {
+                    await registrarMovimiento({ tipo: 'gasto', conc: `SPEI: ${conc}`, monto, fecha: fechaTexto, icon: '🏦' });
                     window.toast('Transferencia exitosa.');
                 }
-                
-                document.getElementById('t-clabe').value = '';
-                document.getElementById('t-concepto').value = '';
-                document.getElementById('t-monto').value = '';
-                document.getElementById('t-fecha').value = '';
-                
-                // Muestra el comprobante detallado de la transferencia
+                ['t-clabe', 't-concepto', 't-monto', 't-fecha'].forEach(id => document.getElementById(id).value = '');
                 window.mostrarComprobante(clabe, conc, monto, fechaTexto);
-                
             } catch (error) {
                 console.error(error);
-                window.toast('Error de conexión con la base de datos.', 'error');
+                window.toast(error.message === 'SIN_FONDOS' ? 'Fondos insuficientes en la cuenta.' : 'Error de conexión con la base de datos.', 'error');
             } finally {
                 btn.textContent = "Transferir Fondos";
                 btn.disabled = false;
             }
         }
 
+        // --- Registro manual de ingresos y gastos ---
+        const CATS = {
+            gasto: [['🍽️','Comida'],['🚕','Transporte'],['⚡','Servicios'],['🛍️','Compras'],['🏠','Hogar'],['💸','Otro']],
+            ingreso: [['💰','Ventas'],['💼','Sueldo'],['📈','Rendimientos'],['💵','Otro']]
+        };
+        let tipoMov = 'gasto';
+        window.setTipoMov = function(t) {
+            tipoMov = t;
+            document.querySelectorAll('#mov-seg button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+            document.getElementById('mov-cat').innerHTML = CATS[t].map(([i, n], x) => `<option value="${x}">${i} ${n}</option>`).join('');
+        }
+        window.abrirMov = function() {
+            setTipoMov('gasto');
+            ['mov-conc', 'mov-monto'].forEach(i => document.getElementById(i).value = '');
+            document.getElementById('modal-mov').classList.add('active');
+        }
+        window.cerrarMov = () => document.getElementById('modal-mov').classList.remove('active');
+        window.guardarMov = async function() {
+            const conc = document.getElementById('mov-conc').value.trim();
+            const monto = parseFloat(document.getElementById('mov-monto').value);
+            const cat = CATS[tipoMov][+document.getElementById('mov-cat').value];
+            if(!conc || isNaN(monto) || monto <= 0) return window.toast('Escribe un concepto y un monto mayor a 0.', 'error');
+            const btn = document.getElementById('btn-mov'); btn.disabled = true;
+            try {
+                await registrarMovimiento({ tipo: tipoMov, conc, monto, fecha: fechaHoy(), icon: cat[0] });
+                window.cerrarMov();
+                window.toast(tipoMov === 'gasto' ? 'Gasto registrado.' : 'Ingreso registrado.');
+            } catch (e) {
+                window.toast(e.message === 'SIN_FONDOS' ? 'Fondos insuficientes en la cuenta.' : 'No se pudo guardar. Revisa tu conexión.', 'error');
+            } finally { btn.disabled = false; }
+        }
+
+        // Totales del mes calculados desde los movimientos guardados
+        function actualizarResumen() {
+            const fmt = n => isPrivate ? '***' : new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2 }).format(n);
+            const ini = new Date(); ini.setDate(1); ini.setHours(0, 0, 0, 0);
+            let ing = 0, gas = 0;
+            allMovements.forEach(m => {
+                if(m.programado || m.timestamp < ini.getTime()) return;
+                if(m.tipo === 'gasto') gas += m.monto; else ing += m.monto;
+            });
+            document.getElementById('w-ing').textContent = fmt(ing);
+            document.getElementById('w-gas').textContent = fmt(gas);
+            const pct = Math.min(100, gas / LIMITE_MENSUAL * 100);
+            const bar = document.getElementById('w-bar');
+            bar.style.width = pct + '%';
+            bar.style.background = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warning)' : 'var(--accent)';
+        }
+
+        // Saldo y preferencias persistentes en Firestore (cuenta/principal)
+        async function iniciarCuenta() {
+            try {
+                const snap = await getDoc(cuentaRef);
+                if(!snap.exists()) await setDoc(cuentaRef, { saldo: SALDO_INICIAL, tema: 'dark', privado: false });
+                onSnapshot(cuentaRef, (s) => {
+                    const d = s.data() || {};
+                    if(typeof d.saldo === 'number') saldoActual = d.saldo;
+                    tema = d.tema || 'dark';
+                    isPrivate = !!d.privado;
+                    pintarTema(); aplicarPriv();
+                });
+            } catch (e) {
+                console.error(e);
+                window.toast('No se pudo cargar tu cuenta desde Firebase.', 'error');
+            }
+        }
+
         // Inicialización
         pintarNav(); pintarTeclado();
         actualizarSaldos();
-        sembrarDatosIniciales().then(() => escucharMovimientos());
+        iniciarCuenta().then(() => sembrarDatosIniciales()).then(() => escucharMovimientos());
 
     </script>
 </body>
